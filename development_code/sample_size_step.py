@@ -1,7 +1,6 @@
+from ir_step import IRStep
 
-from step_general import Step
-
-class Step1(Step):
+class SampleSizeStep(IRStep):
 
     def __init__(self, name, purpose, data):
         super().__init__(name, purpose, data)
@@ -12,4 +11,4 @@ class Step1(Step):
         return "output"
 
     def onfinish(self):
-        print("\n\nfinished step {}\n\n".format(self.name))
+        print("finished step {}".format(self.name))

@@ -1,11 +1,11 @@
 import numpy as np
 from saver import Saver
-from step1 import Step1
-from step2 import Step2
-from step3 import Step3
-from step4 import Step4
-from step5 import Step5
-from step6 import Step6
+from rankings_step import RankingsStep
+from err_step import ERRStep
+from interleavings_step import InterleavingsStep
+from user_clicks_simulation_step import UserClicksSimulationStep
+from interleavings_simulation_step import InterleavingSimulationStep
+from sample_size_step import SampleSizeStep
 
 save_and_load = Saver("data/")
 
@@ -14,12 +14,12 @@ save_and_load = Saver("data/")
 data = save_and_load.load_data_model_1()
 
 steps = [
-    Step1(1, "Simulate Rankings of Relevance for E and P", data),
-    Step2(2, "Calculate the 𝛥measure", data),
-    Step3(3, "Implement Team-Draft Interleaving and Probabilistic Interleaving ", data),
-    Step4(4, "Simulate User Clicks", data),
-    Step5(5, "Simulate Interleaving Experiment", data),
-    Step6(6, "Compute Sample Size", data),
+    RankingsStep(1, "Simulate Rankings of Relevance for E and P", data),
+    ERRStep(2, "Calculate the 𝛥measure", data),
+    InterleavingsStep(3, "Implement Team-Draft Interleaving and Probabilistic Interleaving ", data),
+    UserClicksSimulationStep(4, "Simulate User Clicks", data),
+    InterleavingSimulationStep(5, "Simulate Interleaving Experiment", data),
+    SampleSizeStep(6, "Compute Sample Size", data),
 ]
 
 counter = 0
@@ -32,6 +32,7 @@ def do_next_step(input_list, counter):
 ## Step 1: Simulate Rankings of Relevance for E and P
 
 some_output, counter = do_next_step(["some input", "other input"], counter)
+print(some_output)
 
 ## Step 2: Calculate the 𝛥measure
 

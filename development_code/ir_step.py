@@ -1,6 +1,4 @@
-
-
-class Step(object):
+class IRStep(object):
 
     def __init__(self, name=None, purpose=None, data=None):
         self.name = name

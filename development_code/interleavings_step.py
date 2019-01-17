@@ -1,7 +1,7 @@
 
-from step_general import Step
+from ir_step import IRStep
 
-class Step3(Step):
+class InterleavingsStep(IRStep):
 
     def __init__(self, name, purpose, data):
         super().__init__(name, purpose, data)
