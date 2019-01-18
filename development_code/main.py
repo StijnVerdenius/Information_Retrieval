@@ -32,7 +32,6 @@ def do_next_step(input_list, counter):
 ## Step 1: Simulate Rankings of Relevance for E and P
 
 some_output, counter = do_next_step(["some input", "other input"], counter)
-print(some_output)
 
 ## Step 2: Calculate the 𝛥measure
 

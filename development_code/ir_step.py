@@ -10,8 +10,10 @@ class IRStep(object):
         if (not self.purpose == None):
             print("Goal:" + self.purpose + "\n\n")
 
-        self.onStart(input_list)
+        result = self.onStart(input_list)
         self.onfinish()
+        
+        return result
 
     def onStart(self, input_list):
         raise Exception("method to be overrided by subclass Step#")
