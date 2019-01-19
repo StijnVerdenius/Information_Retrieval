@@ -8,7 +8,10 @@ class InterleavingsStep(IRStep):
 
 
     def onStart(self, input_list):
-        print("some stuff happening.. (dummy ouyput)")
+
+
+
+
         return "output"
 
     def onfinish(self):

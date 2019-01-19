@@ -8,8 +8,13 @@ class ERRStep(IRStep):
 
 
     def onStart(self, input_list):
+
+        ranking_pairs = input_list[0]
+
         print("some stuff happening.. (dummy ouyput)")
-        return "output"
+
+        ERR_TABLE = None # TODO, I'M ASS
+        return ERR_TABLE
 
     def onfinish(self):
         print("finished step {}".format(self.name))

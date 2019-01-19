@@ -31,15 +31,15 @@ def do_next_step(input_list, counter):
 
 ## Step 1: Simulate Rankings of Relevance for E and P
 
-some_output, counter = do_next_step(["some input", "other input"], counter)
+rankings_pairs, counter = do_next_step(None, counter)
 
 ## Step 2: Calculate the 𝛥measure
 
-some_output, counter = do_next_step(["some input", "other input"], counter)
+ERR_table, counter = do_next_step([rankings_pairs], counter)
 
 ## Step 3: Implement Team-Draft Interleaving (5pts) and Probabilistic Interleaving (35 points)
 
-some_output, counter = do_next_step(["some input", "other input"], counter)
+some_output, counter = do_next_step([ERR_table], counter)
 
 ## Step 4: Simulate User Clicks (40 points)
 
