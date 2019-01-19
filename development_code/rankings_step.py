@@ -1,7 +1,7 @@
 from ir_step import IRStep
-from typing import List
 import numpy as np
 import itertools
+from typing import List
 
 from models.document import Document
 from models.relevance import Relevance

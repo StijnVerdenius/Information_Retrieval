@@ -35,11 +35,11 @@ rankings_pairs, counter = do_next_step(None, counter)
 
 ## Step 2: Calculate the 𝛥measure
 
-ERR_table, counter = do_next_step([rankings_pairs], counter)
+ERR_table, length_of_each_ranking, counter = do_next_step([rankings_pairs], counter)
 
 ## Step 3: Implement Team-Draft Interleaving (5pts) and Probabilistic Interleaving (35 points)
 
-some_output, counter = do_next_step([ERR_table], counter)
+interleaving_dictionary, counter = do_next_step((ERR_table, length_of_each_ranking), counter)
 
 ## Step 4: Simulate User Clicks (40 points)
 

@@ -13,8 +13,14 @@ class ERRStep(IRStep):
 
         print("some stuff happening.. (dummy ouyput)")
 
-        ERR_TABLE = None # TODO, I'M ASS
-        return ERR_TABLE
+        ERR_TABLE = None # TODO
+        length_of_each_ranking = None #TODO
+
+        # todo: agree on input-output (see step 3)
+
+
+
+        return ERR_TABLE, length_of_each_ranking
 
     def onfinish(self):
         print("finished step {}".format(self.name))

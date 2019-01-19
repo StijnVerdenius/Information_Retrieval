@@ -2,13 +2,9 @@
 from models.interleavings.interleaving import Interleaving
 from copy import deepcopy
 from random import choice
-
 import itertools
-
-from models.document import Document
-from models.relevance import Relevance
-
 import numpy as np
+from utils import softmax
 
 
 class ProbabilisticInterleaving(Interleaving):
@@ -23,6 +19,8 @@ class ProbabilisticInterleaving(Interleaving):
 
 
     def interleave_docs(self):
+        """ implementation of interleaving """
+
         counters = [len(self.ranking1), len(self.ranking2)]
         rankings = deepcopy([self.ranking1, self.ranking2])
         distributions = deepcopy([self.distribution])+deepcopy([self.distribution])
@@ -37,33 +35,40 @@ class ProbabilisticInterleaving(Interleaving):
             if (counters[which_first] == 0):
                 continue
             counters[which_first] -= 1
-            picked_index = np.random.choice(range(len(distributions[which_first])), p=self.softmax(distributions[which_first]), replace=False)
+            picked_index = np.random.choice(range(len(distributions[which_first])), p=softmax(distributions[which_first]), replace=False)
             picked_document = rankings[which_first].pop(picked_index)
-            chance_which_first = distributions[which_first].pop(picked_index)
+            chance_which_first = self.pop_distribution(picked_index, distributions, which_first)
 
-            # get doc ids from the other ranking and see at what places the doc occurs
-            doc_ids_second_player = [doc.id for doc in rankings[which_second]]
-            indices = [i for i, x in enumerate(doc_ids_second_player) if x == picked_document.id]
-
-            chance_which_second = 0
-            # remove at those places
-            for ind in indices:
-
-                removed = rankings[which_second].pop(ind)
-                chance_which_second = None
-                counters[which_second] -= 1
-
-                # make sure the removed objects ar identical
-                assert removed.id == picked_document.id, "Mistake in prob-interleaving: removing docs from other ranking"
+            # remove from other ranking
+            chance_which_second = self.remove_duplicates_from_other_ranking(rankings, picked_document, counters, which_second, distributions=distributions)
 
             # insert into interleaving
             self.position2chance[len(self.interleaved)] = {which_first: chance_which_first, which_second: chance_which_second}
             self.interleaved.append(picked_document)
 
         # make sure both rankings are empty
-        assert len(rankings[0]) + len(rankings[1]) == 0, "Mistake: not ranking all"
+        assert len(rankings[0]) + len(rankings[1]) == 0, "Mistake: not ranking all docs"
 
-        # get all permutations that coudve generated this interleaving
+        # complete expectation calculation
+        self.fill_in_expectations()
+
+
+
+    def insertclick(self, position):
+        """ implementation of click-saving """
+
+        self.score["ranking1"] += self.position2ranking[position][0]
+        self.score["ranking2"] += self.position2ranking[position][1]
+
+    def pop_distribution(self, index, distributions, which):
+        """ removes element form probability distribution as to be consistent with the documents to be interleaved"""
+
+        return distributions[which].pop(index)
+
+    def fill_in_expectations(self):
+        """ pre-calculates the expectation that is added to both players per new future click """
+
+        # get all permutations that could've generated this interleaving
         chance_of_permutations = []
         contribution_permutations = list(itertools.product([0, 1], repeat=len(self.interleaved)))
 
@@ -71,7 +76,7 @@ class ProbabilisticInterleaving(Interleaving):
         for permutation in contribution_permutations:
             chance_of_permutations.append(float(sum([self.position2chance[i][r] for i, r in zip(range(len(self.interleaved)), permutation)])/self.possible_generators))
 
-        # for both rankings, calculate expectated clicks earned for each click on each position
+        # for both rankings, calculate expectated clicks earned for each future click on each position
         for position in range(len(self.interleaved)):
 
             expectations = [0,0]
@@ -80,34 +85,3 @@ class ProbabilisticInterleaving(Interleaving):
                 expectations[permutation[position]] += self.position2chance[position][permutation[position]]*chance
 
             self.position2ranking[position] = {0: expectations[0], 1 : expectations[1]}
-
-
-
-    def insertclick(self, position):
-        self.score["ranking1"] += self.position2ranking[position][0]
-        self.score["ranking2"] += self.position2ranking[position][1]
-
-
-    def softmax(self, distribution):
-        summation = sum(distribution)
-        return [float(x/summation) for x in distribution]
-
-    def pop_distribution(self, index, distributions, which_second):
-        return distributions[which_second].pop(index)
-
-
-
-
-draft = ProbabilisticInterleaving([Document(x, Relevance(Relevance.NOT_RELEVANT)) for x in range(2)], [Document(x, Relevance(Relevance.NOT_RELEVANT)) for x in range(2)][::-1], [0.6, 0.4])
-
-print(len(draft.interleaved))
-print([x.id for x in draft.interleaved])
-print(draft.position2ranking)
-
-print(draft.score)
-draft.insertclick(0)
-draft.insertclick(1)
-# draft.insertclick(2)
-
-print(draft.score)
-print(draft.get_winner())
