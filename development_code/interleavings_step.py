@@ -19,12 +19,18 @@ class InterleavingsStep(IRStep):
 
         print(self.distribution)
 
+
+
         # todo: agree on input-output
         # todo: cutoff?
         for category in input_list[0]:
+            local_probabilistic_interleavings_list = []
+            local_team_draft_interleavings_list = []
             for ranking1, ranking2 in category:
-                probabilistic_interleavings_list.append(ProbabilisticInterleaving(ranking1, ranking2, self.distribution))
-                team_draft_interleavings_list.append(TeamDraftInterleaving(ranking1, ranking2))
+                local_probabilistic_interleavings_list.append(ProbabilisticInterleaving(ranking1, ranking2, self.distribution))
+                local_team_draft_interleavings_list.append(TeamDraftInterleaving(ranking1, ranking2))
+            probabilistic_interleavings_list.append(local_probabilistic_interleavings_list)
+            team_draft_interleavings_list.append(local_team_draft_interleavings_list)
 
         return {"probabilistic": probabilistic_interleavings_list, "team_draft": team_draft_interleavings_list}
 
