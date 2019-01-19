@@ -60,6 +60,8 @@ class ProbabilisticInterleaving(Interleaving):
         self.score["ranking1"] += self.position2ranking[position][0]
         self.score["ranking2"] += self.position2ranking[position][1]
 
+        self.registered_clicks += 1
+
     def pop_distribution(self, index, distributions, which):
         """ removes element form probability distribution as to be consistent with the documents to be interleaved"""
 

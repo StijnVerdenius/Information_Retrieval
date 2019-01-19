@@ -21,6 +21,7 @@ class Interleaving(object):
         self.interleave_docs()
         if (not cutoff == None):
             self.cut_off_at(cutoff)
+        self.registered_clicks = 0
 
     def interleave_docs(self):
         """ method contracty to be overrided by child-classes """
@@ -31,6 +32,7 @@ class Interleaving(object):
         """ stores a click in the interleaving such that later the score can be extracted """
 
         self.score[self.position2ranking[position]] += 1
+        self.registered_clicks += 1
 
     def get_interleaved_ranking(self) -> List[Document]:
         """ returns list of documents """
@@ -78,3 +80,6 @@ class Interleaving(object):
         """ to be overrided by child-classes that utilize it, to be ignored by those who don't """
 
         pass
+
+    def __str__(self):
+        return "Interleaving: " + str(self.get_interleaved_ranking()) + ", Scores: " + str(self.score), ", Registered clicks: "+ str(self.registered_clicks)
