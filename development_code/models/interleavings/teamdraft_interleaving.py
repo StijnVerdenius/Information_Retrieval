@@ -1,6 +1,10 @@
 from models.interleavings.interleaving import Interleaving
-from random import choice
+from random import choice, randint
 from copy import deepcopy
+
+from models.document import Document
+from models.relevance import Relevance
+
 
 class TeamDraftInterleaving(Interleaving):
 
@@ -33,14 +37,14 @@ class TeamDraftInterleaving(Interleaving):
                 counters[which_second] -= 1
 
                 # make sure the removed objects ar identical
-                assert removed.id == picked_document.id, "Mistake in teamdraft removing docs from other ranking"
+                assert removed.id == picked_document.id, "Mistake in teamdraft: removing docs from other ranking"
 
             # insert into interleaving
             self.position2ranking[len(self.interleaved)] = "ranking"+str(which_first+1)
             self.interleaved.append(picked_document)
 
         # make sure both rankings are empty
-        assert len(rankings[0]) + len(rankings[1]) == 0, "Mistake in ranking all"
+        assert len(rankings[0]) + len(rankings[1]) == 0, "Mistake: not ranking all"
 
 
 

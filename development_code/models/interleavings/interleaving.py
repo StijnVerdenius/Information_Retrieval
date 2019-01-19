@@ -26,7 +26,10 @@ class Interleaving(object):
         return self.score
 
     def get_winner(self):
-        scores = self.score[["ranking" + str(i) for i in range(len(self.score))]]
+
+        scores = [self.score["ranking" + str(i+1)] for i in range(len(self.score))]
+        if (scores[0] == scores[1]):
+            print("warning: tie in interleaving. ranking 1 automatically wins")
         return np.argmax(scores)+1
 
     def cut_off_at(self, cutoff):
@@ -34,3 +37,20 @@ class Interleaving(object):
         for key in self.position2ranking:
             if (key > cutoff):
                 del self.position2ranking[key]
+
+    def remove_duplicates_from_other_ranking(self, rankings, picked_document, counters, which_second, distributions=None):
+
+        # get doc ids from the other ranking and see at what places the doc occurs
+        doc_ids_second_player = [doc.id for doc in rankings[which_second]]
+        index = doc_ids_second_player.index( picked_document.id)
+
+        removed = rankings[which_second].pop(index)
+        counters[which_second] -= 1
+
+        # make sure the removed objects ar identical
+        assert removed.id == picked_document.id, "Mistake in prob-interleaving: removing docs from other ranking"
+
+        return self.pop_distribution(index, distributions, which_second)
+
+    def pop_distribution(self, index, distributions, which_second):
+        pass
