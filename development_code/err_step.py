@@ -8,7 +8,7 @@ class ERRStep(IRStep):
         super().__init__(name, purpose, data)
 
     def onStart(self, ranking_pairs):
-        err_table = self.initialize_err_table()
+        err_table = utils.initialize_err_table()
         
         counter = 0
         for ranking_pair in ranking_pairs:
@@ -32,22 +32,6 @@ class ERRStep(IRStep):
 
     def onfinish(self):
         print("finished step {}".format(self.name))
-
-    def initialize_err_table(self):
-        err_table = {
-            0: [],
-            1: [],
-            2: [],
-            3: [],
-            4: [],
-            5: [],
-            6: [],
-            7: [],
-            8: [],
-            9: []
-        }
-
-        return err_table
 
     def calculate_err(self, documents: [Document]):
         err_score = 0

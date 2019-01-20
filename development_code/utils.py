@@ -27,3 +27,20 @@ def difference_to_err_table_position(difference: int) -> int:
         return 8
     else:
         return 9
+
+
+def initialize_err_table():
+    err_table = {
+        0: [],
+        1: [],
+        2: [],
+        3: [],
+        4: [],
+        5: [],
+        6: [],
+        7: [],
+        8: [],
+        9: []
+    }
+
+    return err_table
