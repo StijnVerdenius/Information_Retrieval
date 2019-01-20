@@ -402,7 +402,7 @@ def EMtrain(data):
 
     counter = 0
 
-    # while abs(np.array(gs[counter]) - np.array(gs[counter-1])) < convergence_e:
+    # while np.linalg.norm(np.array(gs[counter]) - np.array(gs[counter-1])) < convergence_e:
     for i in range(15):
         current_a = alpha_update(alphas, gammas, uq, sc_id, sc)
         current_g = gamma_update(alphas, gammas, uq, sc_id, sc)
@@ -418,7 +418,9 @@ def EMtrain(data):
 
 
 
-a, g = EMtrain(frame)
+
+
+# a, g = EMtrain(frame)
 
 
 # def apply_PBM(i_list, gammas):
