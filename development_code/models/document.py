@@ -8,4 +8,7 @@ class Document:
 
     def __str__(self):
         # return f'<Document (id: {self.id}, relevancy: {0 if self.relevance == Relevance.NOT_RELEVANT else 1})>'
-        return str(self.id)
+        return str(self.relevance)
+
+    def relevance_to_int(self):
+        return 0 if self.relevance == Relevance.NOT_RELEVANT else 1

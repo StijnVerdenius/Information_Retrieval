@@ -15,15 +15,12 @@ class InterleavingsStep(IRStep):
         probabilistic_interleavings_list = []
         team_draft_interleavings_list = []
 
-        self.distribution = softmax([norm.pdf(x, 0, 1.5) for x in range(input_list[1])])
-
+        self.distribution = softmax([norm.pdf(len(x), 0, 1.5) for x in input_list.values()])
         print(self.distribution)
-
-
 
         # todo: agree on input-output
         # todo: cutoff?
-        for category in input_list[0]:
+        for category in input_list.values():
             local_probabilistic_interleavings_list = []
             local_team_draft_interleavings_list = []
             for ranking1, ranking2 in category:

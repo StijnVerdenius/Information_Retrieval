@@ -22,6 +22,7 @@ class RankingsStep(IRStep):
         
         print("--- generating ranking pairs...")
         rankings_pairs = list(itertools.product(p_rankings, e_rankings))
+        rankings_pairs = [(list(item[0]), list(item[1])) for item in rankings_pairs]
 
         print(f'--- finished generating {len(rankings_pairs)} ranking pairs')
                 
