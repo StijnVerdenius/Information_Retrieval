@@ -91,6 +91,8 @@ for i in frame:
 
 gammas = [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
 
+# gammas = [0.9, 0.9, 0.9, 0.7, 0.6, 0.9, 0.4, 0.3, 0.2, 0.1]
+
 
 alphas = {} # key = document, value = query : a_uq
 for f in frame:
@@ -157,7 +159,7 @@ for document in uq:
 for g in range(len(gamma)):
     gamma[g] /= s_r[g+1]
 
-print('gammas = ', np.around(gamma,4))
+print('gammas = ', np.around(gamma,4), '<----- this is from outside the functions')
 
 ##############################################################################################################
 
@@ -240,7 +242,7 @@ def get_uq(data):
     :param data - in the form of a list of libraries
     :return - library with key = document url, value = Query id: list of sessions
     """
-    uq = {}
+    uq = {} #key = document url, value = Query id: list of sessions
     for i in frame:
         if i['TypeOfAction'] == 'Q':
             for u in i['ListOfURLs']:
@@ -252,9 +254,7 @@ def get_uq(data):
                             uq[u][i['QueryID']].append(i['SessionID'])
                     else:
                         uq[u][i['QueryID']] = [i['SessionID']]
-
     return uq
-
 
 
 
@@ -264,23 +264,39 @@ def get_sc(data): # clicks for each session
     :return - library where key = Session ID, value = clicked rank
             & library where key = Session ID, value = clicked id
     """
+    # sc = {}
+    # sc_id = {}
+    # for i in data:
+    #     if i["SessionID"] not in sc.keys():
+    #         sc[i['SessionID']] = [] #Empty if session does not result in click
+    #         sc_id[i['SessionID']] = []
+    #     if i['TypeOfAction'] == 'Q':
+    #         current_q = {"SessionID": i["SessionID"], "ListOfURLs": i["ListOfURLs"]} # may need to remove :6!!!!!!!!!
+    #         # current_q = {"SessionID": i["SessionID"], "ListOfURLs": i["ListOfURLs"][:6]} # may need to remove :6!!!!!!!!!
+    #     if i['TypeOfAction'] == 'C':
+    #         for e in enumerate(current_q["ListOfURLs"]):
+    #             if e[1] == i["URLID"]:
+    #                 rank = e[0]+1
+    #                 sc_id[i['SessionID']].append(i["URLID"])
+    #         sc[i['SessionID']].append(rank) #The rank of the url id clicked in the given session
+    # return sc, sc_id
+
     sc = {}
     sc_id = {}
-    for i in data:
+    for i in frame:
         if i["SessionID"] not in sc.keys():
             sc[i['SessionID']] = [] #Empty if session does not result in click
             sc_id[i['SessionID']] = []
         if i['TypeOfAction'] == 'Q':
-            current_q = {"SessionID": i["SessionID"], "ListOfURLs": i["ListOfURLs"]} # may need to remove :6!!!!!!!!!
-            # current_q = {"SessionID": i["SessionID"], "ListOfURLs": i["ListOfURLs"][:6]} # may need to remove :6!!!!!!!!!
+            current_q = {"SessionID": i["SessionID"], "ListOfURLs": i["ListOfURLs"]}
         if i['TypeOfAction'] == 'C':
             for e in enumerate(current_q["ListOfURLs"]):
                 if e[1] == i["URLID"]:
                     rank = e[0]+1
                     sc_id[i['SessionID']].append(i["URLID"])
             sc[i['SessionID']].append(rank) #The rank of the url id clicked in the given session
-    return sc, sc_id
 
+    return sc, sc_id
 
 
 
@@ -332,7 +348,7 @@ def alpha_update(alphas, gammas, uq, sc_id, sc):
                 alpha2[document][query] += (click + (1-click)*(fraction))
                 counter += 1
 
-                alpha2[document][query] /= counter
+            alpha2[document][query] /= counter
 
     return alpha2
 
@@ -353,6 +369,7 @@ def gamma_update(alphas, gammas, uq, sc_id, sc):
     for document in uq:
         for query in uq[document]:
             for session in uq[document][query]:
+                # counter += 1
                 if session in sc_id.keys():              #NOT SURE ABOUT THIS PART
                     if document in sc_id[session]: #gives click for session of u vs. q combo
                         click = 1
@@ -372,8 +389,6 @@ def gamma_update(alphas, gammas, uq, sc_id, sc):
         gamma[g] /= s_r[g+1]
 
     return list(np.around(gamma,4))
-
-
 
 
 def EMtrain(data):
