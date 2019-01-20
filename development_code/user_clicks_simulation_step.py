@@ -340,6 +340,8 @@ def alpha_update(alphas, gammas, uq, sc_id, sc):
                     else:
                         click = 0
 
+
+                rank = 1 # initialize rank
                 for i,d in enumerate(sc_id[session]): # get corresponding rank of document clicked
                     if d == document:
                         rank = sc[session][i]
@@ -376,6 +378,7 @@ def gamma_update(alphas, gammas, uq, sc_id, sc):
                     else:
                         click = 0
 
+                rank = 1 # initialize rank
                 for i,d in enumerate(sc_id[session]): # get corresponding rank of document clicked
                     if d == document:
                         rank = sc[session][i]
