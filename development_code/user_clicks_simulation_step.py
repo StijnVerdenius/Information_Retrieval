@@ -16,7 +16,8 @@ class UserClicksSimulationStep(IRStep):
 
 
 ###############################################################################################
-
+import numpy as np
+import copy
 
 f = open("data/YandexRelPredChallenge.txt", "r")
 frame = []
@@ -99,7 +100,7 @@ for i in frame:
         sc[i['SessionID']] = [] #Empty if session does not result in click
         sc_id[i['SessionID']] = []
     if i['TypeOfAction'] == 'Q':
-        current_q = {"SessionID": i["SessionID"], "ListOfURLs": i["ListOfURLs"][:6]}
+        current_q = {"SessionID": i["SessionID"], "ListOfURLs": i["ListOfURLs"]}
     if i['TypeOfAction'] == 'C':
         for e in enumerate(current_q["ListOfURLs"]):
             if e[1] == i["URLID"]:
@@ -111,6 +112,77 @@ print(sc[0])
 print(sc_id[0])
 
 
+# gammas = [1, 0.8, 0.6, 0.4, 0.2, 0.0]
+
+gammas = [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
+
+
+alphas = {} # key = document, value = query : a_uq
+for f in frame:
+    if f['TypeOfAction'] == 'Q':
+        for u in f["ListOfURLs"]:
+            if u not in alphas.keys():
+                alphas[u] = {f['QueryID']:0.5}
+            if u in alphas.keys():
+                if f['QueryID'] not in alphas[u].keys():
+                    alphas[u][f['QueryID']] = 0.5
+
+
+alpha2 = copy.deepcopy(alphas)
+
+for document in uq:
+    for query in uq[document]:
+        counter = 0
+        for session in uq[document][query]:
+            if session in sc_id.keys():
+                if document in sc_id[session]: #gives click for session of u vs. q combo
+                    click = 1
+                else:
+                    click = 0
+
+            for i,d in enumerate(sc_id[session]): # get corresponding rank of document clicked
+                if d == document:
+                    rank = sc[session][i]
+            # print('session = ', session)
+            # print('denominator = ',(gammas[rank-1]*alphas[document][query]))
+            # print('alpha = ', alphas[document][query])
+            fraction = ((1 - gammas[rank-1])*alphas[document][query])/(1 - (gammas[rank-1]*alphas[document][query])) # check alphas[document][query]
+            alpha2[document][query] += (click + (1-click)*(fraction))
+            counter += 1
+
+        alpha2[document][query] /= counter
+
+print('alpha_0 =', alphas)
+
+# print('alphas =', alpha2)
+
+######################################################################################
+
+s_r = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0} #sessions per rank (counter)
+gamma = np.array(gammas)
+for document in uq:
+    for query in uq[document]:
+        for session in uq[document][query]:
+            # counter += 1
+            if session in sc_id.keys():              #NOT SURE ABOUT THIS PART
+                if document in sc_id[session]: #gives click for session of u vs. q combo
+                    click = 1
+                else:
+                    click = 0
+
+            for i,d in enumerate(sc_id[session]): # get corresponding rank of document clicked
+                if d == document:
+                    rank = sc[session][i]
+
+            fraction = (gammas[rank-1]*(1-alphas[document][query]))/(1-gammas[rank-1]*alphas[document][query])
+
+            gamma[rank-1] += (click + (1-click)*(fraction))
+            s_r[rank] += 1
+
+for g in range(len(gamma)):
+    gamma[g] /= s_r[g+1]
+
+print('gammas = ', np.around(gamma,4))
 
 # for document in uq:
 #     for query in uq[document]:
@@ -185,7 +257,7 @@ def get_uq(data):
 
 
 
-def get_sc(data):
+def get_sc(data): # clicks for each session
     """
     :param data - in the form of a list of libraries
     :return - library where key = Session ID, value = clicked rank
@@ -198,7 +270,8 @@ def get_sc(data):
             sc[i['SessionID']] = [] #Empty if session does not result in click
             sc_id[i['SessionID']] = []
         if i['TypeOfAction'] == 'Q':
-            current_q = {"SessionID": i["SessionID"], "ListOfURLs": i["ListOfURLs"][:6]} # may need to remove :6!!!!!!!!!
+            current_q = {"SessionID": i["SessionID"], "ListOfURLs": i["ListOfURLs"]} # may need to remove :6!!!!!!!!!
+            # current_q = {"SessionID": i["SessionID"], "ListOfURLs": i["ListOfURLs"][:6]} # may need to remove :6!!!!!!!!!
         if i['TypeOfAction'] == 'C':
             for e in enumerate(current_q["ListOfURLs"]):
                 if e[1] == i["URLID"]:
@@ -231,13 +304,19 @@ def init_alphas(data):
 
 def alpha_update(alphas, gammas, uq, sc_id, sc):
     """
+    :param alphas - library where key = document, value = query : a_uq
+    :param gammas - list of 10 gammas
+    :param uq - library with key = document url, value = Query id: list of sessions
+    :param sc_id - library where key = Session ID, value = clicked id
+    :param sc - library where key = Session ID, value = clicked rank
     :return - update by iterating though all query vs. document seshs
     """
+    alpha2 = copy.deepcopy(alphas)
+
     for document in uq:
         for query in uq[document]:
             counter = 0
             for session in uq[document][query]:
-                counter += 1
                 if session in sc_id.keys():
                     if document in sc_id[session]: #gives click for session of u vs. q combo
                         click = 1
@@ -247,36 +326,68 @@ def alpha_update(alphas, gammas, uq, sc_id, sc):
                 for i,d in enumerate(sc_id[session]): # get corresponding rank of document clicked
                     if d == document:
                         rank = sc[session][i]
+                # print('session = ', session)
+                # print('denominator = ',(gammas[rank-1]*alphas[document][query]))
+                # print('alpha = ', alphas[document][query])
+                fraction = ((1 - gammas[rank-1])*alphas[document][query])/(1 - (gammas[rank-1]*alphas[document][query])) # check alphas[document][query]
+                alpha2[document][query] += (click + (1-click)*(fraction))
+                counter += 1
 
-                fraction = ((1 - gammas[rank])*alphas[document][query])/(1 - (gammas[rank]*alphas[document][query])) # check alphas[document][query]
+            alpha2[document][query] /= counter
 
-                alphas[document][query] += (click + (1-click)*(fraction))
-            alphas[document][query] /= counter
-    return alphas
-
-
-
-
-def gamma_update(alphas, gammas):
-    for r in
+    return alpha2
 
 
 
 
+def gamma_update(alphas, gammas, uq, sc_id, sc):
+    """
+    :param alphas - library where key = document, value = query : a_uq
+    :param gammas - list of 10 gammas
+    :param uq - library with key = document url, value = Query id: list of sessions
+    :param sc_id - library where key = Session ID, value = clicked id
+    :param sc - library where key = Session ID, value = clicked rank
+    :return - list of updated gammas
+    """
+    s_r = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0} #sessions per rank (counter)
+    gamma = np.array(gammas)
+    for document in uq:
+        for query in uq[document]:
+            for session in uq[document][query]:
+                if session in sc_id.keys():              #NOT SURE ABOUT THIS PART
+                    if document in sc_id[session]: #gives click for session of u vs. q combo
+                        click = 1
+                    else:
+                        click = 0
+
+                for i,d in enumerate(sc_id[session]): # get corresponding rank of document clicked
+                    if d == document:
+                        rank = sc[session][i]
+
+                fraction = (gammas[rank-1]*(1-alphas[document][query]))/(1-gammas[rank-1]*alphas[document][query])
+
+                gamma[rank-1] += (click + (1-click)*(fraction))
+                s_r[rank] += 1
+
+    for g in range(len(gamma)):
+        gamma[g] /= s_r[g+1]
+
+    return list(np.around(gamma,4))
 
 
 
-# def EMiter(data):
-#     uq = get_uq(data) #change frame to whatever is the data saved as
-#     sc, sc_id = get_sc(data)
-#     alphas = init_alphas(data) # initializing first alpha
-#     gammas = [1, 0.8, 0.6, 0.4, 0.2, 0.0] #initializing gammas
+
+def EMiter(alphas, gammas, uq, sc_id, sc):
+    alpha_update(alphas, gammas, uq, sc_id, sc)
+    gamma_update(alphas, gammas, uq, sc_id, sc)
 
 
 
-#
-# def EMtrain(data):
-#
-#
+def EMtrain(data):
+    uq = get_uq(data) #change frame to whatever is the data saved as
+    sc, sc_id = get_sc(data)
+    alphas = init_alphas(data) # initializing first alpha
+    gammas = [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
+
 
 
