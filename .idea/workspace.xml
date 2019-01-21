@@ -54,20 +54,20 @@
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/development_code/user_clicks_simulation_step.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="197">
-              <caret line="594" column="18" lean-forward="true" selection-start-line="594" selection-start-column="18" selection-end-line="594" selection-end-column="18" />
+            <state relative-caret-position="377">
+              <caret line="123" column="12" selection-start-line="123" selection-start-column="12" selection-end-line="123" selection-end-column="12" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/development_code/data/YandexRelPredChallenge.txt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="60">
-              <caret line="4" column="36" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="36" />
+              <caret line="4" column="12" lean-forward="true" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -259,6 +259,17 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/development_code/user_clicks_simulation_step.py</url>
+          <line>101</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/development_code/rankings_step.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -313,17 +324,17 @@
     <entry file="file://$PROJECT_DIR$/development_code/models/relevance.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/development_code/data/YandexRelPredChallenge.txt">
+    <entry file="file://$PROJECT_DIR$/development_code/user_clicks_simulation_step.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="36" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="36" />
+        <state relative-caret-position="377">
+          <caret line="123" column="12" selection-start-line="123" selection-start-column="12" selection-end-line="123" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development_code/user_clicks_simulation_step.py">
+    <entry file="file://$PROJECT_DIR$/development_code/data/YandexRelPredChallenge.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="594" column="18" lean-forward="true" selection-start-line="594" selection-start-column="18" selection-end-line="594" selection-end-column="18" />
+        <state relative-caret-position="60">
+          <caret line="4" column="12" lean-forward="true" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="16" />
         </state>
       </provider>
     </entry>

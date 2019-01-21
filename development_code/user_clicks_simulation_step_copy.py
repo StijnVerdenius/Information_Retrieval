@@ -39,7 +39,7 @@ for line in f:
                       "TypeOfAction": elements[2],
                       "QueryID": int(elements[3]),
                       "RegionID": int(elements[4]),
-                      "ListOfURLs": [int(x) for x in elements[5:8]]
+                      "ListOfURLs": [int(x) for x in elements[5:]]
 
                       }
     else:
@@ -534,15 +534,10 @@ def alpha_update(alphas, gammas, uq, sc):
     alpha2 = copy.deepcopy(alphas) #key = document u, value = query: a_uq
     rank = 1 # init rank
     click = 0 #initialize click
-
     for document in uq:
         for query in uq[document]:
-            # counter = 0
-            session_set = set()
-            if (len(session_set) > 0):
-                raise Exception("failed to reset counter")
+            counter = 0
             for session in uq[document][query]:
-                session_set.add(session)
                 for e in sc[session]:
                     if document in e:
                         click = 1
@@ -551,14 +546,10 @@ def alpha_update(alphas, gammas, uq, sc):
                     else:
                         click = 0
 
-                if (click == 0):
-                    fraction = ((1 - gammas[rank-1])*alphas[document][query])/(1 - (gammas[rank-1]*alphas[document][query])) # check alphas[document][query]
-
-                    alpha2[document][query] += fraction
-                else:
-                    alpha2[document][query] += 1
-
-            alpha2[document][query] /= len(session_set)
+                fraction = ((1 - gammas[rank-1])*alphas[document][query])/(1 - (gammas[rank-1]*alphas[document][query])) # check alphas[document][query]
+                alpha2[document][query] += (click + (1-click)*(fraction))
+                counter += 1
+            alpha2[document][query] /= counter
 
 
             # if alpha2[document][query] < 0:
@@ -617,15 +608,13 @@ def gamma_update(alphas, gammas, uq, sc):
     :return - list of updated gammas
     """
     s_r = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0} #sessions per rank (counter)
-
-    sessions_set = set()
+    counter = 0
     gamma = np.array(gammas)
     rank = 1 # initialize rank
     click = 0 #initialize click
     for document in uq:
         for query in uq[document]:
             for session in uq[document][query]:
-                sessions_set.add(session)
                 for e in sc[session]:
                     if document in e:
                         click = 1
@@ -633,20 +622,22 @@ def gamma_update(alphas, gammas, uq, sc):
                         break
                     else:
                         click = 0
+                        # rank =
+                    # print(click)
 
-                if (click == 0):
+                fraction = (gammas[rank-1]*(1-alphas[document][query]))/(1-gammas[rank-1]*alphas[document][query])
+                # print(fraction)
+                gamma[rank-1] += (click + (1-click)*(fraction))
 
 
-                    fraction = (gammas[rank-1]*(1-alphas[document][query]))/(1-gammas[rank-1]*alphas[document][query])
-                    # print(fraction)
-                    gamma[rank-1] += fraction
-                else:
-                    gamma[rank-1] += 1
+                if click == 1:
+                    if (click + (1-click)*(fraction)) != 1:
+                        raise Exception
 
                 s_r[rank] += 1
 
     for g in range(len(gamma)):
-        gamma[g] /= len(sessions_set)
+        gamma[g] /= s_r[g+1]
 
     return list(np.around(gamma,4))
 
@@ -683,31 +674,27 @@ def gamma_update(alphas, gammas, uq, sc):
 def EMtrain(data):
     uq = get_uq(data) #change frame to whatever is the data saved as
     sc = get_sc(data)
-    current_a = init_alphas(data) # initializing first alpha
+    alphas = init_alphas(data) # initializing first alpha
     # gammas = [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
-    current_g = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1][:3]
-
-    # als = [alphas]
+    gammas = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+    gs = [gammas]
+    als = [alphas]
     convergence_e = 0.01
     counter = 0
 
     while 1==1: #infinite loop
     # for i in range(15):
-        last = copy.deepcopy(current_g)
+    #     current_g = gamma_update(als[counter], gs[counter], uq, sc)
+        current_g = gamma_update(alphas, gs[counter], uq, sc)
 
-        current_g = gamma_update(current_a, current_g, uq, sc)
-        # current_g = gamma_update(alphas, gs[counter], uq, sc)
-
-        current_a = alpha_update(current_a, current_g, uq, sc)
+        # current_a = alpha_update(als[counter], gs[counter], uq, sc)
 
         # als.append(current_a)
-        # gs.append(current_g)
+        gs.append(current_g)
         counter += 1
         print('iteration number = ', counter)
         print('gs = ', current_g)
-        # print('as = ', current_a)
-        if np.linalg.norm(np.array(current_g) - np.array(last)) < convergence_e and counter > 0: # Convergence criteria
-            print('gs = ', current_g)
+        if np.linalg.norm(np.array(gs[counter]) - np.array(gs[counter-1])) < convergence_e and counter > 0: # Convergence criteria
             break
     # return current_a, current_g
     return current_g
