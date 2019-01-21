@@ -148,7 +148,7 @@ for i in frame:
             if u == i["URLID"]:
                 sc[i['SessionID']].append((r+1, u))
 
-# print(sc[0])
+print(sc[0])
 
 
 
@@ -574,45 +574,47 @@ def EMtrain(data):
 
     while 1==1: #infinite loop
     # for i in range(15):
-        current_g = gamma_update(als[counter], gs[counter], uq, sc)
-        # current_g = gamma_update(alphas, gs[counter], uq, sc)
+    #     current_g = gamma_update(als[counter], gs[counter], uq, sc)
+        current_g = gamma_update(alphas, gs[counter], uq, sc)
 
-        current_a = alpha_update(als[counter], gs[counter], uq, sc)
+        # current_a = alpha_update(als[counter], gs[counter], uq, sc)
 
-        als.append(current_a)
+        # als.append(current_a)
         gs.append(current_g)
         counter += 1
         print('iteration number = ', counter)
         print('gs = ', current_g)
         if np.linalg.norm(np.array(gs[counter]) - np.array(gs[counter-1])) < convergence_e and counter > 0: # Convergence criteria
             break
-    return current_a, current_g
-    # return current_g
+    # return current_a, current_g
+    return current_g
 
-a, g = EMtrain(frame)
-
-
-# g = EMtrain(frame)
+# a, g = EMtrain(frame)
 
 
-# def apply_PBM(i_list, gammas):
-#     """
-#     :param i_list - list of tuples --> (document rank, relevance)
-#     :param gammas - probability of each rank being clicked
-#     :return - list of 0s and 1s (0 denoting no-click at corresponding index, and 1 denoting click)
-#     """
-#     epsilon = 1e-6
-#     click_r = []
-#     for i in range(len(i_list)):
-#         if i[1] == relevant:
-#             a = 1 - epsilon
-#         else:
-#             a = epsilon
-#
-#         if random.random() <= gammas[i]*a:
-#             click_r.append(1)
-#         else:
-#             click_r.append(0)
-#
-#     return click_r
+g = EMtrain(frame)
+
+
+def apply_PBM(i_ranks, gammas):
+    """
+    :param i_list - list of tuples --> (document rank, relevance)
+    :param gammas - probability of each rank being clicked
+    :return - list of 0s and 1s (0 denoting no-click at corresponding index, and 1 denoting click)
+    """
+    epsilon = 1e-6
+    click_r = []
+    i_list = i_ranks.get_interleaved_ranking()
+
+
+    for index, e in i_list:
+        r = e.relevance_to_int()
+        if r == 1:
+            a = 1 - epsilon
+        else:
+            a = epsilon
+
+        if random.random() <= gammas[i]*a:
+            i_ranks.insertclick(index)
+
+
 
