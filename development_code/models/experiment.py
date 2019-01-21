@@ -24,9 +24,9 @@ class Experiment():
                     
                     # TODO: calculate the result from the click model
                     if result:
-                        wins += 1
+                        wins += 1 # TODO: use the interleaving api instead of counting wins yourself
                 
             current_interval_pairs_length = len(self.err_table[interval_key])
-            self.win_percentage[interval_key] = wins / (self.k * current_interval_pairs_length)
+            self.win_percentage[interval_key] = wins / (self.k * current_interval_pairs_length) # TODO: use the interleaving api instead of counting wins yourself
         
-        return self.win_percentage
+        return self.win_percentage # TODO: use the interleaving api instead of counting wins yourself

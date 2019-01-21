@@ -8,7 +8,7 @@ class TeamDraftInterleaving(Interleaving):
     def __init__(self, ranking1, ranking2, cutoff=None):
         super().__init__(ranking1, ranking2, cutoff)
 
-    def interleave_docs(self):
+    def _interleave_docs(self): # PRIVATE
         """ implementation of interleaving """
 
         counters = [len(self.ranking1), len(self.ranking2)]
@@ -26,7 +26,7 @@ class TeamDraftInterleaving(Interleaving):
             counters[which_first] -= 1
             picked_document = rankings[which_first].pop(0)
 
-            self.remove_duplicates_from_other_ranking(rankings, picked_document, counters, which_second)
+            self._remove_duplicates_from_other_ranking(rankings, picked_document, counters, which_second)
 
             # insert into interleaving
             self.position2ranking[len(self.interleaved)] = "ranking"+str(which_first+1)

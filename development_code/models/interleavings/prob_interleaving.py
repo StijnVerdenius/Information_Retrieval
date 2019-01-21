@@ -18,7 +18,7 @@ class ProbabilisticInterleaving(Interleaving):
         super().__init__(ranking1, ranking2, cutoff)
 
 
-    def interleave_docs(self):
+    def _interleave_docs(self): #PRIVATE
         """ implementation of interleaving """
 
         counters = [len(self.ranking1), len(self.ranking2)]
@@ -37,10 +37,10 @@ class ProbabilisticInterleaving(Interleaving):
             counters[which_first] -= 1
             picked_index = np.random.choice(range(len(distributions[which_first])), p=softmax(distributions[which_first]), replace=False)
             picked_document = rankings[which_first].pop(picked_index)
-            chance_which_first = self.pop_distribution(picked_index, distributions, which_first)
+            chance_which_first = self._pop_distribution(picked_index, distributions, which_first)
 
             # remove from other ranking
-            chance_which_second = self.remove_duplicates_from_other_ranking(rankings, picked_document, counters, which_second, distributions=distributions)
+            chance_which_second = self._remove_duplicates_from_other_ranking(rankings, picked_document, counters, which_second, distributions=distributions)
 
             # insert into interleaving
             self.position2chance[len(self.interleaved)] = {which_first: chance_which_first, which_second: chance_which_second}
@@ -50,24 +50,25 @@ class ProbabilisticInterleaving(Interleaving):
         assert len(rankings[0]) + len(rankings[1]) == 0, "Mistake: not ranking all docs"
 
         # complete expectation calculation
-        self.fill_in_expectations()
+        self._fill_in_expectations()
 
 
 
-    def insertclick(self, position):
+    def insertclick(self, position): # USE THIS
         """ implementation of click-saving """
 
         self.score["ranking1"] += self.position2ranking[position][0]
         self.score["ranking2"] += self.position2ranking[position][1]
 
         self.registered_clicks += 1
+        self.click_history.append(position)
 
-    def pop_distribution(self, index, distributions, which):
+    def _pop_distribution(self, index, distributions, which): # PRIVATE
         """ removes element form probability distribution as to be consistent with the documents to be interleaved"""
 
         return distributions[which].pop(index)
 
-    def fill_in_expectations(self):
+    def _fill_in_expectations(self): # PRIVATE
         """ pre-calculates the expectation that is added to both players per new future click """
 
         # get all permutations that could've generated this interleaving
