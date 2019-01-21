@@ -435,6 +435,7 @@ def alpha_update(alphas, gammas, uq, sc):
                     if document in e:
                         click = 1
                         rank = e[0]
+                        break
                     else:
                         click = 0
 
@@ -511,6 +512,7 @@ def gamma_update(alphas, gammas, uq, sc):
                     if document in e:
                         click = 1
                         rank = e[0]
+                        break
                     else:
                         click = 0
                     # print(click)
@@ -574,25 +576,25 @@ def EMtrain(data):
 
     while 1==1: #infinite loop
     # for i in range(15):
-    #     current_g = gamma_update(als[counter], gs[counter], uq, sc)
-        current_g = gamma_update(alphas, gs[counter], uq, sc)
+        current_g = gamma_update(als[counter], gs[counter], uq, sc)
+        # current_g = gamma_update(alphas, gs[counter], uq, sc)
 
-        # current_a = alpha_update(als[counter], gs[counter], uq, sc)
+        current_a = alpha_update(als[counter], gs[counter], uq, sc)
 
-        # als.append(current_a)
+        als.append(current_a)
         gs.append(current_g)
         counter += 1
         print('iteration number = ', counter)
         print('gs = ', current_g)
         if np.linalg.norm(np.array(gs[counter]) - np.array(gs[counter-1])) < convergence_e and counter > 0: # Convergence criteria
             break
-    # return current_a, current_g
-    return current_g
+    return current_a, current_g
+    # return current_g
 
-# a, g = EMtrain(frame)
+a, g = EMtrain(frame)
 
 
-g = EMtrain(frame)
+# g = EMtrain(frame)
 
 
 def apply_PBM(i_ranks, gammas):
