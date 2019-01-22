@@ -9,30 +9,24 @@ class Experiment():
         self.click_model = click_model
 
     def run(self):
-        # self.win_percentage = utils.initialize_err_table()
+        self.win_percentage = utils.initialize_err_table()
         wins = 0
 
         # for each interval, for each ranking pair we first 
         # run interleaving model then the click model k times
-        for interleaving_lists in self.interleaving_interval_lists:
+        for interval_index, interleaving_lists in enumerate(self.interleaving_interval_lists):
+            self.win_percentage[interval_index] = []
             for interleaving in interleaving_lists:
+                wins = 0
                 for _ in range(self.k):
-
-
                     self.click_model.apply(interleaving)
-
-
-
-                    score = interleaving.get_score()
-                    print(score)
-
-                    # question from stijn: does the score needs to be reset for every _ in self.k?
-
-
-                winner = interleaving.get_winner()
-                # todo: add winner to correct counter
+                    print(interleaving.click_history)
+                    print(interleaving.get_score())
+                    winner = interleaving.get_winner()
+                    if winner == "E":
+                        wins += 1
                 
-            # current_interval_pairs_length = len(self.err_table[interval_key])
-            # self.win_percentage[interval_key] = wins / (self.k * current_interval_pairs_length)
+                current_pair_win_percentage = wins / self.k
+                self.win_percentage[interval_index].append(current_pair_win_percentage)
         
         return self.win_percentage
