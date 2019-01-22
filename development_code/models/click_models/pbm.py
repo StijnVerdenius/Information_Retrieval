@@ -41,7 +41,8 @@ class PBM(Click_Model):
             print('\riteration number = {} gs = {}'.format(counter, current_g), end='')
             if np.linalg.norm(np.array(gs[-1]) - np.array(gs[-2])) < convergence_e and counter > 0:  # Convergence criteria
                 print("\n")
-                return current_g
+                self.parameters = current_g
+                return
 
     def apply(self, interleaving):
 
@@ -58,7 +59,11 @@ class PBM(Click_Model):
             else:
                 alpha = epsilon
 
-            if random.random() <= self.parameters[index] * alpha:
+            dice = random.random()
+
+            evaluated = self.parameters[index] * alpha
+
+            if dice <= evaluated:
                 interleaving.insertclick(index)
 
     def get_uq(self):

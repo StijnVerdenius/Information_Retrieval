@@ -24,7 +24,9 @@ class Random_Click_Model(Click_Model):
 
         rho = numerator / denominator
 
-        return rho
+        self.parameters = rho
+        print("Final rho {}".format(rho))
+        return
 
 
     def apply(self, interleaving):
@@ -32,6 +34,6 @@ class Random_Click_Model(Click_Model):
 
         interleaving_list = interleaving.get_interleaved_ranking()
 
-        for index, e in interleaving_list:
+        for index, _ in enumerate(interleaving_list):
             if random.random() <= self.parameters:
                 interleaving.insertclick(index)

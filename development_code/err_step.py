@@ -25,12 +25,13 @@ class ERRStep(IRStep):
             err_table_position = utils.difference_to_err_table_position(difference)
             err_table[err_table_position].append(ranking_pair)
 
-            if counter >= 1:
-                for document in ranking_pair[0]:
-                    print(document)
-                print("----------------")
-                for document in ranking_pair[1]:
-                    print(document)
+
+            if counter >= 100:
+                # for document in ranking_pair[0]:
+                #     print(document)
+                # print("----------------")
+                # for document in ranking_pair[1]:
+                #     print(document)
                 break
 
         print (f'total ranking pairs left: {counter}')

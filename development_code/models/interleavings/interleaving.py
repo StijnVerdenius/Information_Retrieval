@@ -62,7 +62,7 @@ class Interleaving(object):
 
         scores = [self.score[i] for i in ["P", "E"]]
         if (scores[0] == scores[1]):
-            print("warning: tie in interleaving. '-1' returned")
+            # print("warning: tie in interleaving. '-1' returned")
             return -1
         return self.ranking2algorithm[np.argmax(scores)]
 

@@ -20,13 +20,13 @@ class Experiment():
                 wins = 0
                 for _ in range(self.k):
                     self.click_model.apply(interleaving)
-                    print(interleaving.click_history)
-                    print(interleaving.get_score())
+                    # print(interleaving.click_history)
+                    # print(interleaving.get_score())
                     winner = interleaving.get_winner()
                     if winner == "E":
                         wins += 1
                 
                 current_pair_win_percentage = wins / self.k
                 self.win_percentage[interval_index].append(current_pair_win_percentage)
-        
+        print(self.win_percentage)
         return self.win_percentage
