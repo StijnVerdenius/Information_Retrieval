@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2f6d33c0-2258-464c-9389-97151114f6df" name="Default Changelist" comment="" />
+    <list default="true" id="2f6d33c0-2258-464c-9389-97151114f6df" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development_code/user_clicks_simulation_step_copy.py" beforeDir="false" afterPath="$PROJECT_DIR$/development_code/user_clicks_simulation_step_copy.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,7 +17,7 @@
         <entry file="file://$PROJECT_DIR$/development_code/saver.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="465">
-              <caret line="32" selection-start-line="32" selection-end-line="57" selection-end-column="40" />
+              <caret line="35" selection-start-line="35" selection-end-line="60" selection-end-column="40" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -55,8 +58,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/development_code/user_clicks_simulation_step.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="570">
-              <caret line="564" selection-start-line="564" selection-end-line="564" selection-end-column="65" />
+            <state relative-caret-position="660">
+              <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
             </state>
           </provider>
         </entry>
@@ -64,8 +67,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/development_code/user_clicks_simulation_step_copy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="392">
-              <caret line="133" column="23" selection-start-line="133" selection-start-column="23" selection-end-line="133" selection-end-column="23" />
+            <state relative-caret-position="437">
+              <caret line="285" lean-forward="true" selection-start-line="285" selection-end-line="285" />
+              <folding>
+                <element signature="e#151#169#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -73,7 +79,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/development_code/data/YandexRelPredChallenge.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
+            <state relative-caret-position="-1350">
               <caret line="3" column="24" selection-start-line="3" selection-start-column="20" selection-end-line="3" selection-end-column="24" />
             </state>
           </provider>
@@ -300,13 +306,8 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/development_code/user_clicks_simulation_step.py</url>
-          <line>101</line>
+          <line>40</line>
           <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/development_code/user_clicks_simulation_step.py</url>
-          <line>416</line>
-          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -336,7 +337,7 @@
     <entry file="file://$PROJECT_DIR$/development_code/saver.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="465">
-          <caret line="32" selection-start-line="32" selection-end-line="57" selection-end-column="40" />
+          <caret line="35" selection-start-line="35" selection-end-line="60" selection-end-column="40" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
@@ -367,22 +368,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/development_code/data/YandexRelPredChallenge.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
+        <state relative-caret-position="-1350">
           <caret line="3" column="24" selection-start-line="3" selection-start-column="20" selection-end-line="3" selection-end-column="24" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/development_code/user_clicks_simulation_step.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="564" selection-start-line="564" selection-end-line="564" selection-end-column="65" />
+        <state relative-caret-position="660">
+          <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/development_code/user_clicks_simulation_step_copy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="392">
-          <caret line="133" column="23" selection-start-line="133" selection-start-column="23" selection-end-line="133" selection-end-column="23" />
+        <state relative-caret-position="437">
+          <caret line="285" lean-forward="true" selection-start-line="285" selection-end-line="285" />
+          <folding>
+            <element signature="e#151#169#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

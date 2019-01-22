@@ -239,26 +239,67 @@ a, g = EMtrain(frame)
 # g = EMtrain(frame)
 
 
-# def apply_PBM(i_ranks, gammas):
-#     """
-#     :param i_list - list of tuples --> (document rank, relevance)
-#     :param gammas - probability of each rank being clicked
-#     :return - list of 0s and 1s (0 denoting no-click at corresponding index, and 1 denoting click)
-#     """
-#     epsilon = 1e-6
-#     click_r = []
-#     i_list = i_ranks.get_interleaved_ranking()
-#
-#
-#     for index, e in i_list:
-#         r = e.relevance_to_int()
-#         if r == 1:
-#             a = 1 - epsilon
-#         else:
-#             a = epsilon
-#
-#         if random.random() <= gammas[element]*a:
-#             i_ranks.insertclick(index)
+def apply_PBM(i_ranks, gammas):
+    epsilon = 1e-6
+    i_list = i_ranks.get_interleaved_ranking()
+
+    for index, e in i_list:
+        r = e.relevance_to_int()
+        if r == 1:
+            a = 1 - epsilon
+        else:
+            a = epsilon
+
+        if random.random() <= gammas[element]*a:
+            i_ranks.insertclick(index)
+
+
+############################################################################################## ----- RCM
 
 
 
+def RCMtrain(data):
+    sc = get_sc(data)
+    numerator = 0
+    denominator = 0
+    for session in sc:
+        for query in sc[session]:
+            for document in sc[session][query]:
+                if document[2] is True:
+                    numerator += 1
+                denominator += 1
+
+    rho = numerator/denominator
+
+    return rho
+
+
+rho = RCMtrain(frame)
+
+
+def apply_RCM(i_ranks, rho):
+    i_list = i_ranks.get_interleaved_ranking()
+
+    for index, e in i_list:
+        if random.random() <= rho:
+            i_ranks.insertclick(index)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#
+# def apply_RCM(i_ranks):
+#     p_click = i_list = i_ranks.get_interleaved_ranking()
+#
