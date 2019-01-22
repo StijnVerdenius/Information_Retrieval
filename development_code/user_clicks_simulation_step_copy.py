@@ -125,16 +125,16 @@ def alpha_update(alphas, gammas, uq, sc, data):
     :return - update by iterating though all query vs. document seshs
     """
     # alpha2 = copy.deepcopy(alphas) #key = document u, value = query: a_uq
-    alpha2 = init_alphas(data, 0)
+    alpha2 = init_alphas(data, 1)
     rank = 1 # init rank
     click = 0 #initialize click
 
     for document in uq:
         for query in uq[document]:
-            counter = 0
+            counter = 2
 
             for session in uq[document][query]:
-                # counter += 1
+                counter += 1
                 for e in sc[session][query]:
                     if document == e[1]:
                         rank = e[0]
@@ -150,7 +150,7 @@ def alpha_update(alphas, gammas, uq, sc, data):
                     alpha2[document][query] += fraction
                 else:
                     alpha2[document][query] += 1
-                counter += 1
+                # counter += 1
             # print('a be4 =', alpha2[document][query])
             alpha2[document][query] /= counter
 
@@ -171,8 +171,7 @@ def gamma_update(alphas, gammas, uq, sc):
     :return - list of updated gammas
     """
     s_r = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0} #sessions per rank (counter)
-
-    sessions_set = set()
+    # counter = 0
     gamma = np.zeros(len(gammas))
     rank = 1 # initialize rank
     click = 0 #initialize click
@@ -182,6 +181,7 @@ def gamma_update(alphas, gammas, uq, sc):
                 for e in sc[session][query]:
                     if document == e[1]:
                         rank = e[0]
+                        s_r[rank] += 1
                         if e[2] == True:
                             click = 1
                         else:
@@ -196,10 +196,12 @@ def gamma_update(alphas, gammas, uq, sc):
                 else:
                     gamma[rank-1] += 1
                 # print('rank = ',rank)
-                s_r[rank] += 1
+                # s_r[rank] += 1
+                # counter += 1
 
     for g in range(len(gamma)):
         gamma[g] /= s_r[g+1]
+    # gamma /= counter
 
     return list(np.around(gamma,4))
 
@@ -208,7 +210,7 @@ def gamma_update(alphas, gammas, uq, sc):
 def EMtrain(data):
     uq = get_uq(data) #change frame to whatever is the data saved as
     sc = get_sc(data)
-    alphas = init_alphas(data, 0.5) # initializing first alpha
+    alphas = init_alphas(data, 0.2) # initializing first alpha
     # gammas = [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
     gammas = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
     gs = [gammas]
@@ -225,6 +227,7 @@ def EMtrain(data):
         als.append(current_a)
 
         counter += 1
+        print('')
         print('iteration number = ', counter)
         print('gs = ', current_g)
         if np.linalg.norm(np.array(gs[counter]) - np.array(gs[counter-1])) < convergence_e and counter > 0: # Convergence criteria
