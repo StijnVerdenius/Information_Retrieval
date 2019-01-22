@@ -28,6 +28,8 @@ class Random_Click_Model(Click_Model):
 
 
     def apply(self, interleaving):
+        interleaving.reset_score()
+
         interleaving_list = interleaving.get_interleaved_ranking()
 
         for index, e in interleaving_list:

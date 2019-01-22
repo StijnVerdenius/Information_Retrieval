@@ -18,7 +18,10 @@ class Experiment():
             for interleaving in interleaving_lists:
                 for _ in range(self.k):
 
+
                     self.click_model.apply(interleaving)
+
+
 
                     score = interleaving.get_score()
                     print(score)

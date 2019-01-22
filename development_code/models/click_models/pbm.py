@@ -44,10 +44,14 @@ class PBM(Click_Model):
                 return current_g
 
     def apply(self, interleaving):
+
+
+        interleaving.reset_score()
+
         epsilon = 1e-6
         interleaving_list = interleaving.get_interleaved_ranking()
 
-        for index, document in interleaving_list:
+        for index, document in enumerate(interleaving_list):
             relevance = document.relevance_to_int()
             if relevance == 1:
                 alpha = 1 - epsilon
