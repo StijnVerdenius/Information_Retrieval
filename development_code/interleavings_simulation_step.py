@@ -1,5 +1,6 @@
 from ir_step import IRStep
 from models.experiment import Experiment
+import user_clicks_simulation_step
 
 class InterleavingSimulationStep(IRStep):
     def __init__(self, name, purpose, data):
@@ -7,23 +8,22 @@ class InterleavingSimulationStep(IRStep):
 
 
     def onStart(self, input_list):
-        interleaving_model_1 = input_list[0]
-        interleaving_model_2 = input_list[1]
+        probabilistic_interleavings_list = input_list[0]["probabilistic"]
+        team_draft_interleavings_list = input_list[0]["team_draft"]
+        probabilistic_click_model = input_list[1]["probabilistic"]
+        random_click_model = input_list[1]["random"]
+        gammas = input_list[2]
 
-        click_model_1 = input_list[2]
-        click_model_2 = input_list[3]
-
-        err_table = input_list[4]
-
-        experiment_1 = Experiment(interleaving_model_1, click_model_1)
-        experiment_2 = Experiment(interleaving_model_1, click_model_2)
-        experiment_3 = Experiment(interleaving_model_2, click_model_1)
-        experiment_4 = Experiment(interleaving_model_2, click_model_2)
+        probabilistic_click_model = user_clicks_simulation_step.apply_PBM
+        experiment_1 = Experiment(probabilistic_interleavings_list, probabilistic_click_model, gammas)
+        # experiment_2 = Experiment(probabilistic_interleavings_list, random_click_model, gammas)
+        experiment_3 = Experiment(team_draft_interleavings_list, probabilistic_click_model, gammas)
+        # experiment_4 = Experiment(team_draft_interleavings_list, random_click_model, gammas)
 
         result_1 = experiment_1.run()
-        result_2 = experiment_2.run()
+        # result_2 = experiment_2.run()
         result_3 = experiment_3.run()
-        result_4 = experiment_4.run()
+        # result_4 = experiment_4.run()
 
         # TODO: Combine the results
         result = {}

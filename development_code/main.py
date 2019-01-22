@@ -47,7 +47,7 @@ some_output, counter = do_next_step(["some input", "other input"], counter)
 
 ## Step 5: Simulate Interleaving Experiment
 
-some_output, counter = do_next_step(["some input", "other input"], counter)
+some_output, counter = do_next_step([interleaving_dictionary, {"probabilistic": [], "random": []}, [0.8589, 0.4368, 0.3142]], counter)
 
 ## Step 6: Compute Sample Size
 

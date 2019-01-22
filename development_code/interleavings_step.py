@@ -15,7 +15,8 @@ class InterleavingsStep(IRStep):
         probabilistic_interleavings_list = []
         team_draft_interleavings_list = []
 
-        self.distribution = softmax([norm.pdf(len(x), 0, 1.5) for x in input_list.values()])
+        # what's supposed to be here?
+        self.distribution = softmax([norm.pdf(x.relevance_to_int(), 0, 1.5) for x in input_list[3][0][0]])
         print(self.distribution)
 
         # todo: agree on input-output
