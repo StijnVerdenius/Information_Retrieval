@@ -43,7 +43,7 @@ interleaving_dictionary, counter = do_next_step(err_table, counter)
 
 ## Step 4: Simulate User Clicks (40 points)
 
-click_models, counter = do_next_step([3], counter)
+click_models, counter = do_next_step([10], counter)
 
 ## Step 5: Simulate Interleaving Experiment
 
@@ -54,5 +54,7 @@ resulting_dictionary, counter = do_next_step([interleaving_dictionary, {"probabi
 filled_in_table, counter = do_next_step(resulting_dictionary, counter)
 
 print("#######\n\n\nFINAL RESULT\n\n\n{}".format(filled_in_table))
+
+save_and_load.save_python_obj(filled_in_table, "Final result")
 
 # Step 7: Analysis (20 points) (notebook only)

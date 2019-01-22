@@ -7,7 +7,6 @@ class Click_Model(object):
     def __init__(self, gammas, data):
         self.gammas = gammas
         self.data = data
-        self.train()
 
 
     def train(self):
@@ -15,3 +14,4 @@ class Click_Model(object):
 
     def apply(self, interleaving):
         raise NotImplementedError("to be overrided")
+

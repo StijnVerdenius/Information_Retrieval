@@ -17,10 +17,7 @@ class InterleavingsStep(IRStep):
 
         # what's supposed to be here?
         self.distribution = softmax([norm.pdf(x, 0, 1.5) for x in range(3)])
-        print(self.distribution)
 
-        # todo: agree on input-output
-        # todo: cutoff?
         for number, category in enumerate(input_list.values()):
             print ("\nStart interleaving category {}".format(number))
 

@@ -10,6 +10,8 @@ class Random_Click_Model(Click_Model):
 
 
     def train(self):
+        print("Starting training")
+
         # ELIAS ADD TRAINING CODE HERE
         raise NotImplementedError("ELIAS ADD TRAINING CODE HERE")
 
