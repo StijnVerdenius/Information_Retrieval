@@ -43,11 +43,11 @@ interleaving_dictionary, counter = do_next_step(err_table, counter)
 
 ## Step 4: Simulate User Clicks (40 points)
 
-some_output, counter = do_next_step(["some input", "other input"], counter)
+click_models, counter = do_next_step([3], counter)
 
 ## Step 5: Simulate Interleaving Experiment
 
-some_output, counter = do_next_step([interleaving_dictionary, {"probabilistic": [], "random": []}, [0.8589, 0.4368, 0.3142]], counter)
+some_output, counter = do_next_step([interleaving_dictionary, {"probabilistic": click_models[0], "random": click_models[1]}], counter)
 
 ## Step 6: Compute Sample Size
 

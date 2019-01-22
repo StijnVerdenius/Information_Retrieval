@@ -1,5 +1,8 @@
 
 from ir_step import IRStep
+from saver import Saver
+from models.click_models.pbm import PBM
+from models.click_models.random_click import Random_Click_Model
 
 class UserClicksSimulationStep(IRStep):
 
@@ -8,8 +11,26 @@ class UserClicksSimulationStep(IRStep):
 
 
     def onStart(self, input_list):
-        print("some stuff happening.. (dummy ouyput)")
-        return "output"
+        length_interleaving = input_list[0]
+        save_and_load = Saver("data/")
+
+        pbm_model = PBM([0.5]*length_interleaving, self.data)
+        try:
+            gammas_pbm = save_and_load.load_python_obj("gammas_pbm")
+            pbm_model.gammas = gammas_pbm
+        except:
+            pbm_model.train()
+            save_and_load.save_python_obj(pbm_model.gammas, "gammas_pbm")
+
+        random_model = Random_Click_Model([0.5] * length_interleaving, self.data)
+        try:
+            gammas_random = save_and_load.load_python_obj("gammas_random")
+            random_model.gammas = gammas_random
+        except:
+            random_model.train()
+            save_and_load.save_python_obj(random_model.gammas, "gammas_random")
+
+        return (pbm_model, random_model)
 
     def onfinish(self):
         print("finished step {}".format(self.name))
@@ -431,6 +452,7 @@ def alpha_update(alphas, gammas, uq, sc):
     for document in uq:
         for query in uq[document]:
             # counter = 0
+            summation = 0
             session_set = set()
             if (len(session_set) > 0):
                 raise Exception("failed to reset counter")
@@ -446,12 +468,12 @@ def alpha_update(alphas, gammas, uq, sc):
 
                 if (click == 0):
                     fraction = ((1 - gammas[rank-1])*alphas[document][query])/(1 - (gammas[rank-1]*alphas[document][query])) # check alphas[document][query]
-
-                    alpha2[document][query] += fraction
+                    # print(fraction)
+                    summation += fraction
                 else:
-                    alpha2[document][query] += 1
+                    summation += 1
 
-            alpha2[document][query] /= len(session_set)
+            alpha2[document][query] += summation/len(session_set)
 
 
             # if alpha2[document][query] < 0:
@@ -499,7 +521,7 @@ def alpha_update(alphas, gammas, uq, sc):
 #         gamma[g] /= s_r[g+1]
 #
 #     return list(np.around(gamma,4))
-
+from utils import softmax
 
 def gamma_update(alphas, gammas, uq, sc):
     """
@@ -541,7 +563,7 @@ def gamma_update(alphas, gammas, uq, sc):
     for g in range(len(gamma)):
         gamma[g] /= len(sessions_set)
 
-    return list(np.around(gamma,4))
+    return softmax(list(np.around(gamma,4)))
 
 
 #
@@ -606,6 +628,10 @@ def EMtrain(data):
     # return current_g
 
 a, g = EMtrain(frame)
+
+# for key in a:
+#     for keykey in a[key]:
+#         print (a[key][keykey])
 
 
 # g = EMtrain(frame)

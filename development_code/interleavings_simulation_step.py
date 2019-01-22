@@ -12,12 +12,11 @@ class InterleavingSimulationStep(IRStep):
         team_draft_interleavings_list = input_list[0]["team_draft"]
         probabilistic_click_model = input_list[1]["probabilistic"]
         random_click_model = input_list[1]["random"]
-        gammas = input_list[2]
 
         probabilistic_click_model = user_clicks_simulation_step.apply_PBM
-        experiment_1 = Experiment(probabilistic_interleavings_list, probabilistic_click_model, gammas)
+        experiment_1 = Experiment(probabilistic_interleavings_list, probabilistic_click_model)
         # experiment_2 = Experiment(probabilistic_interleavings_list, random_click_model, gammas)
-        experiment_3 = Experiment(team_draft_interleavings_list, probabilistic_click_model, gammas)
+        experiment_3 = Experiment(team_draft_interleavings_list, probabilistic_click_model)
         # experiment_4 = Experiment(team_draft_interleavings_list, random_click_model, gammas)
 
         result_1 = experiment_1.run()
