@@ -36,14 +36,22 @@ class ERRStep(IRStep):
     def calculate_err(self, documents: [Document]):
         err_score = 0
 
+        max_relevance = 0
+        for document in documents:
+            document_relevance = document.relevance_to_int()
+            if document_relevance > max_relevance:
+                max_relevance = document_relevance
+
         for r, document in enumerate(documents):
             inner_result = 1
+            for i in range(r):
+                theta_i = (2**(documents[i].relevance_to_int()) - 1)/ (2**(max_relevance))
+                inner_result *= (1 - theta_i)
+        
+            theta_r = (2**(document.relevance_to_int()) - 1)/ (2**(max_relevance))
+            current_err_score = inner_result * theta_r
+            current_err_score /= (r + 1)
             
-            if r > 0:
-                for i in range(r - 1):
-                    inner_result *= (1 - documents[i].relevance_to_int())
-            
-            err_score = inner_result * document.relevance_to_int()
-            err_score /= (r + 1)
+            err_score += current_err_score
         
         return err_score

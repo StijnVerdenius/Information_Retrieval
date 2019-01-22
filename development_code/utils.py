@@ -5,7 +5,8 @@ def softmax(distribution):
     return [float(x / summation) for x in distribution]
 
 def difference_to_err_table_position(difference: int) -> int:
-    if difference < 0.05 or difference > 0.95:
+    # if difference < 0.05 or 
+    if difference > 0.95:
         raise Exception("Invalid difference")
     elif difference < 0.1:
         return 0
