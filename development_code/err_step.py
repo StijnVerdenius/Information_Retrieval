@@ -25,7 +25,6 @@ class ERRStep(IRStep):
             err_table_position = utils.difference_to_err_table_position(difference)
             err_table[err_table_position].append(ranking_pair)
 
-
             # if counter >= 100:
             #     break
 

@@ -43,7 +43,7 @@ interleaving_dictionary, counter = do_next_step(err_table, counter)
 
 ## Step 4: Simulate User Clicks (40 points)
 
-click_models, counter = do_next_step([10], counter)
+click_models, counter = do_next_step([6], counter)
 
 ## Step 5: Simulate Interleaving Experiment
 
