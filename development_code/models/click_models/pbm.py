@@ -7,8 +7,8 @@ import numpy as np
 
 class PBM(Click_Model):
 
-    def __init__(self, gammas, data):
-        super().__init__(gammas, data)
+    def __init__(self, parameters, data):
+        super().__init__(parameters, data)
 
 
     def train(self):
@@ -54,7 +54,7 @@ class PBM(Click_Model):
             else:
                 alpha = epsilon
 
-            if random.random() <= self.gammas[index] * alpha:
+            if random.random() <= self.parameters[index] * alpha:
                 interleaving.insertclick(index)
 
     def get_uq(self):
@@ -75,34 +75,7 @@ class PBM(Click_Model):
                             uq[u][i['QueryID']] = [i['SessionID']]
         return uq
 
-    def get_sc(self):  # clicks for each session
-        """
-        :param data - in the form of a list of libraries
-        :return - library where key = Session ID, value = query:[rank, url,click]
-        """
-        sc = {}  # key = Session ID, value = (clicked rank, url)
-        current_q = {}
-        for i in self.data:
-            if i["SessionID"] not in sc.keys():
-                sc[i['SessionID']] = {i['QueryID']: []}
 
-            if i['TypeOfAction'] == 'Q':
-                if i['QueryID'] not in sc[i["SessionID"]].keys():
-                    sc[i['SessionID']][i['QueryID']] = []  # Empty if session does not result in click
-                current_q = {"SessionID": i["SessionID"], "QueryID": i['QueryID'], "ListOfURLs": i["ListOfURLs"]}
-                for r, u in enumerate(i["ListOfURLs"]):
-                    sc[i['SessionID']][i['QueryID']].append([r + 1, u, False])
-            if i['TypeOfAction'] == 'C':
-                try:
-                    cur_q = current_q["ListOfURLs"]
-                except:
-                    continue
-                for r, u in enumerate(cur_q):
-                    if u == i["URLID"]:
-                        for sublist in sc[i['SessionID']][current_q['QueryID']]:
-                            if sublist[1] == u:
-                                sublist[2] = True
-        return sc
 
     def init_alphas(self, value):
         """
@@ -123,7 +96,7 @@ class PBM(Click_Model):
     def alpha_update(self, alphas, gammas, uq, sc):
         """
         :param alphas - library where key = document, value = query : a_uq
-        :param gammas - list of 10 gammas
+        :param gammas - list of 10 parameters
         :param uq - library with key = document url, value = Query id: list of sessions
         :param sc - library where key = Session ID, value = (clicked rank, url)
         :return - update by iterating though all query vs. document seshs
@@ -166,10 +139,10 @@ class PBM(Click_Model):
     def gamma_update(self, alphas, gammas, uq, sc):
         """
         :param alphas - library where key = document, value = query : a_uq
-        :param gammas - list of 10 gammas
+        :param gammas - list of 10 parameters
         :param uq - library with key = document url, value = Query id: list of sessions
         :param sc - library where key = Session ID, value = (clicked rank, url)
-        :return - list of updated gammas
+        :return - list of updated parameters
         """
         s_r = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0}  # sessions per rank (counter)
         # counter = 0

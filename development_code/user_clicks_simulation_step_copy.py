@@ -119,7 +119,7 @@ def init_alphas(data, value):
 def alpha_update(alphas, gammas, uq, sc, data):
     """
     :param alphas - library where key = document, value = query : a_uq
-    :param gammas - list of 10 gammas
+    :param gammas - list of 10 parameters
     :param uq - library with key = document url, value = Query id: list of sessions
     :param sc - library where key = Session ID, value = (clicked rank, url)
     :return - update by iterating though all query vs. document seshs
@@ -165,10 +165,10 @@ def alpha_update(alphas, gammas, uq, sc, data):
 def gamma_update(alphas, gammas, uq, sc):
     """
     :param alphas - library where key = document, value = query : a_uq
-    :param gammas - list of 10 gammas
+    :param gammas - list of 10 parameters
     :param uq - library with key = document url, value = Query id: list of sessions
     :param sc - library where key = Session ID, value = (clicked rank, url)
-    :return - list of updated gammas
+    :return - list of updated parameters
     """
     s_r = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0} #sessions per rank (counter)
     # counter = 0
@@ -211,7 +211,7 @@ def EMtrain(data):
     uq = get_uq(data) #change frame to whatever is the data saved as
     sc = get_sc(data)
     alphas = init_alphas(data, 0.2) # initializing first alpha
-    # gammas = [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
+    # parameters = [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
     gammas = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
     gs = [gammas]
     als = [alphas]

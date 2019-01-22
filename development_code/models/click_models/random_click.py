@@ -5,17 +5,31 @@ import random
 
 class Random_Click_Model(Click_Model):
 
-    def __init__(self, gammas, data):
-        super().__init__(gammas, data)
+    def __init__(self, parameters, data):
+        super().__init__(parameters, data)
 
 
     def train(self):
         print("Starting training")
 
-        # ELIAS ADD TRAINING CODE HERE
-        raise NotImplementedError("ELIAS ADD TRAINING CODE HERE")
+        sc = self.get_sc()
+        numerator = 0
+        denominator = 0
+        for session in sc:
+            for query in sc[session]:
+                for document in sc[session][query]:
+                    if document[2] is True:
+                        numerator += 1
+                    denominator += 1
+
+        rho = numerator / denominator
+
+        return rho
 
 
     def apply(self, interleaving):
-        #same as pbm or not?
-        raise NotImplementedError("ELIAS ADD APPLY CODE HERE")
+        interleaving_list = interleaving.get_interleaved_ranking()
+
+        for index, e in interleaving_list:
+            if random.random() <= self.parameters:
+                interleaving.insertclick(index)
