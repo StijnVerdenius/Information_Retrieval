@@ -47,10 +47,12 @@ click_models, counter = do_next_step([3], counter)
 
 ## Step 5: Simulate Interleaving Experiment
 
-some_output, counter = do_next_step([interleaving_dictionary, {"probabilistic": click_models[0], "random": click_models[1]}], counter)
+resulting_dictionary, counter = do_next_step([interleaving_dictionary, {"probabilistic": click_models[0], "random": click_models[1]}], counter)
 
 ## Step 6: Compute Sample Size
 
-some_output, counter = do_next_step(["some input", "other input"], counter)
+filled_in_table, counter = do_next_step(resulting_dictionary, counter)
+
+print("#######\n\n\nFINAL RESULT\n\n\n{}".format(filled_in_table))
 
 # Step 7: Analysis (20 points) (notebook only)

@@ -1,4 +1,6 @@
 print("Hello cunts!")
 
 
-print(([1]*8)[5:8])
+
+
+print(list({1: None, 2: None}))

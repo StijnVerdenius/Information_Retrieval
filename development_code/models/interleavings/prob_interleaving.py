@@ -9,20 +9,20 @@ from utils import softmax
 
 class ProbabilisticInterleaving(Interleaving):
 
-    def __init__(self, ranking1, ranking2, distribution, cutoff=None):
+    def __init__(self, alg_P, alg_E, distribution, cutoff=None):
         self.distribution = distribution
-        assert len(distribution) == len(ranking1) == len(
-            ranking2), "rankings and/or distribution not fo the same lengths"
-        self.possible_generators = len(ranking1) * len(ranking2)
+        assert len(distribution) == len(alg_P) == len(
+            alg_E), "rankings and/or distribution not fo the same lengths"
+        self.possible_generators = len(alg_P) * len(alg_E)
         self.position2chance = {}
-        super().__init__(ranking1, ranking2, cutoff)
+        super().__init__(alg_P, alg_E, cutoff)
 
 
     def _interleave_docs(self): #PRIVATE
         """ implementation of interleaving """
 
-        counters = [len(self.ranking1), len(self.ranking2)]
-        rankings = deepcopy([self.ranking1, self.ranking2])
+        counters = [len(self.alg_P), len(self.alg_E)]
+        rankings = deepcopy([self.alg_P, self.alg_E])
         distributions = deepcopy([self.distribution])+deepcopy([self.distribution])
 
         while (sum(counters) > 0):
@@ -57,8 +57,8 @@ class ProbabilisticInterleaving(Interleaving):
     def insertclick(self, position): # USE THIS
         """ implementation of click-saving """
 
-        self.score["ranking1"] += self.position2ranking[position][0]
-        self.score["ranking2"] += self.position2ranking[position][1]
+        self.score["P"] += self.position2ranking[position][0]
+        self.score["E"] += self.position2ranking[position][1]
 
         self.registered_clicks += 1
         self.click_history.append(position)
