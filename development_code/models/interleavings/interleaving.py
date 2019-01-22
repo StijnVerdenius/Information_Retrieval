@@ -12,12 +12,13 @@ Holds some main functionality
 class Interleaving(object):
 
 
-    def __init__(self, ranking1, ranking2, cutoff=None):
-        self.ranking1 = ranking1
-        self.ranking2 = ranking2
+    def __init__(self, alg_P, alg_E, cutoff=None):
+        self.alg_P = alg_P
+        self.alg_E = alg_E
+        self.ranking2algorithm = {0: "P", 1: "E"}
         self.position2ranking = {}
         self.interleaved = []
-        self.score = {"ranking1" : 0, "ranking2" : 0}
+        self.score = {"E" : 0, "P" : 0}
         self._interleave_docs()
         if (not cutoff == None):
             self.cut_off_at(cutoff)
@@ -32,7 +33,7 @@ class Interleaving(object):
     def insertclick(self, position):  # USE THIS ONE
         """ stores a click in the interleaving such that later the score can be extracted """
 
-        self.score[self.position2ranking[position]] += 1
+        self.score[self.ranking2algorithm[self.position2ranking[position]]] += 1
         self.registered_clicks += 1
         self.click_history.append(position)
 
@@ -49,20 +50,27 @@ class Interleaving(object):
 
         return self.score
 
-    def get_winner(self): # USE THIS ONE
-        """ """
+    def reset_score(self): ## USE THIS ONE
+        """ resets counters but leaves interleaving intact """
 
-        scores = [self.score["ranking" + str(i+1)] for i in range(len(self.score))]
+        self.score = {"E": 0, "P": 0}
+        self.registered_clicks = 0
+        self.click_history = []
+
+    def get_winner(self): # USE THIS ONE
+        """ gets winner of interleaving """
+
+        scores = [self.score[i] for i in ["P", "E"]]
         if (scores[0] == scores[1]):
             print("warning: tie in interleaving. '-1' returned")
             return -1
-        return np.argmax(scores)+1
+        return self.ranking2algorithm[np.argmax(scores)]
 
     def cut_off_at(self, cutoff): # USE THIS ONE (IF NEEDED)
         """ cuts off interleaving after certain rank. note: expectations are not recalculated """
 
         self.interleaved = self.interleaved[:cutoff]
-        for key in self.position2ranking:
+        for key in list(self.position2ranking):
             if (key > cutoff):
                 del self.position2ranking[key]
 
@@ -71,15 +79,19 @@ class Interleaving(object):
 
         # get doc ids from the other ranking and see at what places the doc occurs
         doc_ids_second_player = [doc.id for doc in rankings[which_second]]
-        index = doc_ids_second_player.index( picked_document.id)
 
-        removed = rankings[which_second].pop(index)
-        counters[which_second] -= 1
+        if (picked_document.id in doc_ids_second_player):
+            index = doc_ids_second_player.index( picked_document.id)
 
-        # make sure the removed objects ar identical
-        assert removed.id == picked_document.id, "Mistake in prob-interleaving: removing docs from other ranking"
+            removed = rankings[which_second].pop(index)
+            counters[which_second] -= 1
 
-        return self._pop_distribution(index, distributions, which_second)
+            # make sure the removed objects ar identical
+            assert removed.id == picked_document.id, "Mistake in prob-interleaving: removing docs from other ranking"
+
+            return self._pop_distribution(index, distributions, which_second)
+        else:
+            return 0
 
     def _pop_distribution(self, index, distributions, which_second): #PRIVATE
         """ to be overrided by child-classes that utilize it, to be ignored by those who don't """

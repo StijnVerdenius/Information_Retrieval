@@ -5,14 +5,14 @@ from copy import deepcopy
 
 class TeamDraftInterleaving(Interleaving):
 
-    def __init__(self, ranking1, ranking2, cutoff=None):
-        super().__init__(ranking1, ranking2, cutoff)
+    def __init__(self, alg_P, alg_E, cutoff=None):
+        super().__init__(alg_P, alg_E, cutoff)
 
     def _interleave_docs(self): # PRIVATE
         """ implementation of interleaving """
 
-        counters = [len(self.ranking1), len(self.ranking2)]
-        rankings = deepcopy([self.ranking1, self.ranking2])
+        counters = [len(self.alg_P), len(self.alg_E)]
+        rankings = deepcopy([self.alg_P, self.alg_E])
 
         while(sum(counters) > 0):
 
@@ -29,7 +29,7 @@ class TeamDraftInterleaving(Interleaving):
             self._remove_duplicates_from_other_ranking(rankings, picked_document, counters, which_second)
 
             # insert into interleaving
-            self.position2ranking[len(self.interleaved)] = "ranking"+str(which_first+1)
+            self.position2ranking[len(self.interleaved)] = which_first
             self.interleaved.append(picked_document)
 
         # make sure both rankings are empty
