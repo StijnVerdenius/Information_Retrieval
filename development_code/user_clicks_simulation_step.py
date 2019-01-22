@@ -68,20 +68,20 @@ for line in f:
 
     frame.append(dictionary)
 
-
-
-uq = {} #key = document url, value = Query id: list of sessions
-for element in frame:
-    if element['TypeOfAction'] == 'Q':
-        for u in element['ListOfURLs']:
-            if u not in uq.keys():
-                uq[u] = {element['QueryID'] : [element['SessionID']]} # add url and corresponding query and session id
-            if u in uq.keys():
-                if element['QueryID'] in uq[u].keys():          #check if document vs. query combo already exists
-                    # if i['SessionID'] not in uq[u][i['QueryID']]: #check if session id already exists in document vs. query combo
-                    uq[u][element['QueryID']].append(element['SessionID'])
-                else:
-                    uq[u][element['QueryID']] = [element['SessionID']]
+#
+#
+# uq = {} #key = document url, value = Query id: list of sessions
+# for element in frame:
+#     if element['TypeOfAction'] == 'Q':
+#         for u in element['ListOfURLs']:
+#             if u not in uq.keys():
+#                 uq[u] = {element['QueryID'] : [element['SessionID']]} # add url and corresponding query and session id
+#             if u in uq.keys():
+#                 if element['QueryID'] in uq[u].keys():          #check if document vs. query combo already exists
+#                     # if i['SessionID'] not in uq[u][i['QueryID']]: #check if session id already exists in document vs. query combo
+#                     uq[u][element['QueryID']].append(element['SessionID'])
+#                 else:
+#                     uq[u][element['QueryID']] = [element['SessionID']]
 
 # print(list(uq.keys())[0])
 
@@ -123,26 +123,26 @@ sc = {} #key = Session ID, value = (clicked rank, url)
 # print(sc[0])
 
 #
-# for element in frame:
-#     if element["SessionID"] not in sc.keys():
-#         sc[element['SessionID']] = {element['QueryID']:[]}
-#
-#     if element['TypeOfAction'] == 'Q':
-#         if element['QueryID'] not in sc[element["SessionID"]].keys():
-#             sc[element['SessionID']][element['QueryID']] = [] #Empty if session does not result in click
-#         current_q = {"SessionID": element["SessionID"], "QueryID": element['QueryID'], "ListOfURLs": element["ListOfURLs"]}
-#         for r, u in enumerate(element["ListOfURLs"]):
-#             # print(sc[i['SessionID']][i['QueryID']])
-#             sc[element['SessionID']][element['QueryID']].append([r + 1, u, False])
-#     if element['TypeOfAction'] == 'C':
-#         for r,u in enumerate(current_q["ListOfURLs"]):
-#             if u == element["URLID"]:
-#                 for sublist in sc[element['SessionID']][current_q['QueryID']]:
-#                     if sublist[1] == u:
-#                         sublist[2] = True
-#
-#
-# print(sc[0][1974])
+for element in frame:
+    if element["SessionID"] not in sc.keys():
+        sc[element['SessionID']] = {element['QueryID']:[]}
+
+    if element['TypeOfAction'] == 'Q':
+        if element['QueryID'] not in sc[element["SessionID"]].keys():
+            sc[element['SessionID']][element['QueryID']] = [] #Empty if session does not result in click
+        current_q = {"SessionID": element["SessionID"], "QueryID": element['QueryID'], "ListOfURLs": element["ListOfURLs"]}
+        for r, u in enumerate(element["ListOfURLs"]):
+            # print(sc[i['SessionID']][i['QueryID']])
+            sc[element['SessionID']][element['QueryID']].append([r + 1, u, False])
+    if element['TypeOfAction'] == 'C':
+        for r,u in enumerate(current_q["ListOfURLs"]):
+            if u == element["URLID"]:
+                for sublist in sc[element['SessionID']][current_q['QueryID']]:
+                    if sublist[1] == u:
+                        sublist[2] = True
+
+
+print(sc[0])
 
 
 
@@ -167,39 +167,17 @@ sc = {} #key = Session ID, value = (clicked rank, url)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-alphas = {} # key = document, value = query : a_uq
-for f in frame:
-    if f['TypeOfAction'] == 'Q':
-        for u in f["ListOfURLs"]:
-            if u not in alphas.keys():
-                alphas[u] = {f['QueryID']:0.5}
-            if u in alphas.keys():
-                if f['QueryID'] not in alphas[u].keys():
-                    alphas[u][f['QueryID']] = 0.5
+#
+#
+# alphas = {} # key = document, value = query : a_uq
+# for f in frame:
+#     if f['TypeOfAction'] == 'Q':
+#         for u in f["ListOfURLs"]:
+#             if u not in alphas.keys():
+#                 alphas[u] = {f['QueryID']:0.5}
+#             if u in alphas.keys():
+#                 if f['QueryID'] not in alphas[u].keys():
+#                     alphas[u][f['QueryID']] = 0.5
 
 # counter = 0
 # for document in alphas:
@@ -211,6 +189,8 @@ for f in frame:
 
 
 gammas = [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
+
+
 
 
 ######################################################## Experimental Zone
@@ -246,42 +226,42 @@ gammas = [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
 #
 # print(data_1[1627])
 
-
-sc = {} #key = Session ID, value = (clicked rank, url)
-
-for element in frame:
-    if element["SessionID"] not in sc.keys():
-        sc[element['SessionID']] = [] #Empty if session does not result in click
-    if element['TypeOfAction'] == 'Q':
-        current_q = {"SessionID": element["SessionID"], "ListOfURLs": element["ListOfURLs"]}
-    if element['TypeOfAction'] == 'C':
-        for r,u in enumerate(current_q["ListOfURLs"]):
-            if u == element["URLID"]:
-                sc[element['SessionID']].append((r + 1, u))
-
-print(sc[0])
-
-
-
-
-alpha2 = copy.deepcopy(alphas) #key = document u, value = query: a_uq
-rank = 1 # init rank
-for document in uq:
-    for query in uq[document]:
-        counter = 0
-        for session in uq[document][query]:
-            for e in sc[session]:
-                if document in e:
-                    click = 1
-                    rank = e[0]
-                else:
-                    click = 0
-
-            fraction = ((1 - gammas[rank-1])*alphas[document][query])/(1 - (gammas[rank-1]*alphas[document][query])) # check alphas[document][query]
-            alpha2[document][query] += (click + (1-click)*(fraction))
-            counter += 1
-
-        alpha2[document][query] /= counter
+#
+# sc = {} #key = Session ID, value = (clicked rank, url)
+#
+# for element in frame:
+#     if element["SessionID"] not in sc.keys():
+#         sc[element['SessionID']] = [] #Empty if session does not result in click
+#     if element['TypeOfAction'] == 'Q':
+#         current_q = {"SessionID": element["SessionID"], "ListOfURLs": element["ListOfURLs"]}
+#     if element['TypeOfAction'] == 'C':
+#         for r,u in enumerate(current_q["ListOfURLs"]):
+#             if u == element["URLID"]:
+#                 sc[element['SessionID']].append((r + 1, u))
+#
+# print(sc[0])
+#
+#
+#
+#
+# alpha2 = copy.deepcopy(alphas) #key = document u, value = query: a_uq
+# rank = 1 # init rank
+# for document in uq:
+#     for query in uq[document]:
+#         counter = 0
+#         for session in uq[document][query]:
+#             for e in sc[session]:
+#                 if document in e:
+#                     click = 1
+#                     rank = e[0]
+#                 else:
+#                     click = 0
+#
+#             fraction = ((1 - gammas[rank-1])*alphas[document][query])/(1 - (gammas[rank-1]*alphas[document][query])) # check alphas[document][query]
+#             alpha2[document][query] += (click + (1-click)*(fraction))
+#             counter += 1
+#
+#         alpha2[document][query] /= counter
 
 
 
@@ -289,29 +269,29 @@ for document in uq:
 
 
 
-
-s_r = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0} #sessions per rank (counter)
-gamma = np.array(gammas)
-rank = 1 # initialize rank
-for document in uq:
-    for query in uq[document]:
-        for session in uq[document][query]:
-            for e in sc[session]:
-                if document in e:
-                    click = 1
-                    rank = e[0]
-                else:
-                    click = 0
-
-            fraction = (gammas[rank-1]*(1-alphas[document][query]))/(1-gammas[rank-1]*alphas[document][query])
-            gamma[rank-1] += (click + (1-click)*(fraction))
-            s_r[rank] += 1
-
-for g in range(len(gamma)):
-    gamma[g] /= s_r[g+1]
-
-
-print('gammas = ', np.around(gamma,4), '<----- this is from outside the functions')
+#
+# s_r = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0} #sessions per rank (counter)
+# gamma = np.array(gammas)
+# rank = 1 # initialize rank
+# for document in uq:
+#     for query in uq[document]:
+#         for session in uq[document][query]:
+#             for e in sc[session]:
+#                 if document in e:
+#                     click = 1
+#                     rank = e[0]
+#                 else:
+#                     click = 0
+#
+#             fraction = (gammas[rank-1]*(1-alphas[document][query]))/(1-gammas[rank-1]*alphas[document][query])
+#             gamma[rank-1] += (click + (1-click)*(fraction))
+#             s_r[rank] += 1
+#
+# for g in range(len(gamma)):
+#     gamma[g] /= s_r[g+1]
+#
+#
+# print('gammas = ', np.around(gamma,4), '<----- this is from outside the functions')
 
 ########################################################
 
@@ -565,13 +545,15 @@ def alpha_update(alphas, gammas, uq, sc):
                 raise Exception("failed to reset counter")
             for session in uq[document][query]:
                 session_set.add(session)
-                for e in sc[session]:
+                for e in sc[session][query]:
                     if document in e:
-                        click = 1
                         rank = e[0]
+                        if e[2] == True:
+                            click = 1
+                        # rank = e[0]
+                        else:
+                            click = 0
                         break
-                    else:
-                        click = 0
 
                 if (click == 0):
                     fraction = ((1 - gammas[rank-1])*alphas[document][query])/(1 - (gammas[rank-1]*alphas[document][query])) # check alphas[document][query]
@@ -589,6 +571,8 @@ def alpha_update(alphas, gammas, uq, sc):
             # if alpha2[document][query] > 1:
             #     raise Exception
     return alpha2
+
+
 
 
 # def gamma_update(alphas, gammas, uq, sc_id, sc):
@@ -648,13 +632,16 @@ def gamma_update(alphas, gammas, uq, sc):
         for query in uq[document]:
             for session in uq[document][query]:
                 sessions_set.add(session)
-                for e in sc[session]:
+                for e in sc[session][query]:
                     if document in e:
-                        click = 1
                         rank = e[0]
+                        if e[2] == True:
+                            click = 1
+                        # rank = e[0]
+                        else:
+                            click = 0
                         break
-                    else:
-                        click = 0
+
 
                 if (click == 0):
 
@@ -731,10 +718,10 @@ def EMtrain(data):
         if np.linalg.norm(np.array(current_g) - np.array(last)) < convergence_e and counter > 0: # Convergence criteria
             print('gs = ', current_g)
             break
-    # return current_a, current_g
-    return current_g
+    return current_a, current_g
+    # return current_g
 
-# a, g = EMtrain(frame)
+a, g = EMtrain(frame)
 
 # for key in a:
 #     for keykey in a[key]:
