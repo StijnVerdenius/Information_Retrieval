@@ -17,7 +17,8 @@ class PBM(Click_Model):
         uq = self.get_uq()  # change frame to whatever is the data saved as
         sc = self.get_sc()
         alphas = self.init_alphas(0.2)  # initializing first alpha
-        gammas = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+        # gammas = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+        gammas = self.parameters
         gs = [gammas]
         als = [alphas]
         convergence_e = 0.01
@@ -153,7 +154,7 @@ class PBM(Click_Model):
         :param sc - library where key = Session ID, value = (clicked rank, url)
         :return - list of updated parameters
         """
-        s_r = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0}  # sessions per rank (counter)
+        s_r = {1: 0, 2: 0, 3: 0} #, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0}  # sessions per rank (counter)
         # counter = 0
         gamma = np.zeros(len(gammas))
         rank = 1  # initialize rank

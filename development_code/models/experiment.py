@@ -1,7 +1,7 @@
 import utils
 
 class Experiment():
-    k = 100
+    k = 3000
 
     def __init__(self, interleaving_interval_lists, click_model):
         self.win_percentage = {}
@@ -20,13 +20,11 @@ class Experiment():
                 wins = 0
                 for _ in range(self.k):
                     self.click_model.apply(interleaving)
-                    # print(interleaving.click_history)
-                    # print(interleaving.get_score())
+
                     winner = interleaving.get_winner()
                     if winner == "E":
                         wins += 1
                 
                 current_pair_win_percentage = wins / self.k
                 self.win_percentage[interval_index].append(current_pair_win_percentage)
-        print(self.win_percentage)
         return self.win_percentage

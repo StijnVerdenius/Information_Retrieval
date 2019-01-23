@@ -31,11 +31,11 @@ class InterleavingsStep(IRStep):
                     print("\r{} out of {} done".format(pair_number,  len(category)), end='')
 
                 probabilistic_interleaving = ProbabilisticInterleaving(ranking1, ranking2, self.distribution)
-                # probabilistic_interleaving.cut_off_at(3)
+                probabilistic_interleaving.cut_off_at(3)
                 local_probabilistic_interleavings_list.append(probabilistic_interleaving)
 
                 draft_interleaving = TeamDraftInterleaving(ranking1, ranking2)
-                # draft_interleaving.cut_off_at(3)
+                draft_interleaving.cut_off_at(3)
                 local_team_draft_interleavings_list.append(draft_interleaving)
 
             probabilistic_interleavings_list.append(local_probabilistic_interleavings_list)

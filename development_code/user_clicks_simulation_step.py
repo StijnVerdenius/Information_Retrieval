@@ -26,7 +26,7 @@ class UserClicksSimulationStep(IRStep):
 
         random_model = Random_Click_Model([0.2] * length_interleaving, self.data)
         try:
-            print("Attempting loading gamma's from pickle")
+            print("Attempting loading rho's from pickle")
             rho_random = save_and_load.load_python_obj("rho_random")
             random_model.parameters = rho_random
         except:

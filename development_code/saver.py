@@ -52,7 +52,7 @@ class Saver():
                                   "TypeOfAction": elements[2],
                                   "QueryID": int(elements[3]),
                                   "RegionID": int(elements[4]),
-                                  "ListOfURLs": [int(x) for x in elements[5:]]
+                                  "ListOfURLs": [int(x) for x in elements[5:8]]
 
                                   }
                 else:
