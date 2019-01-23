@@ -10,13 +10,14 @@ class Experiment():
 
     def run(self):
         self.win_percentage = utils.initialize_err_table()
-        wins = 0
 
         # for each interval, for each ranking pair we first 
         # run interleaving model then the click model k times
         for interval_index, interleaving_lists in enumerate(self.interleaving_interval_lists):
+            print("\rRunning interval: {} out of {}".format(interval_index, 9), end='')
             self.win_percentage[interval_index] = []
             for interleaving in interleaving_lists:
+
                 wins = 0
                 for _ in range(self.k):
                     self.click_model.apply(interleaving)

@@ -4,7 +4,6 @@ import itertools
 from typing import List
 
 from models.document import Document
-from models.relevance import Relevance
 
 class RankingsStep(IRStep):
 

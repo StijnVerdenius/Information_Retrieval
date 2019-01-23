@@ -154,7 +154,7 @@ class PBM(Click_Model):
         :param sc - library where key = Session ID, value = (clicked rank, url)
         :return - list of updated parameters
         """
-        s_r = {1: 0, 2: 0, 3: 0} #, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0}  # sessions per rank (counter)
+        s_r = {key+1 : 0 for key in range(len(gammas))}#, 7: 0, 8: 0, 9: 0, 10: 0}  # sessions per rank (counter)
         # counter = 0
         gamma = np.zeros(len(gammas))
         rank = 1  # initialize rank

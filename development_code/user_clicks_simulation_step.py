@@ -24,7 +24,7 @@ class UserClicksSimulationStep(IRStep):
             pbm_model.train()
             save_and_load.save_python_obj(pbm_model.parameters, "gammas_pbm")
 
-        random_model = Random_Click_Model([0.2] * length_interleaving, self.data)
+        random_model = Random_Click_Model([0.1] * length_interleaving, self.data)
         try:
             print("Attempting loading rho's from pickle")
             rho_random = save_and_load.load_python_obj("rho_random")

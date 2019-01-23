@@ -1,9 +1,12 @@
+from functools import lru_cache
+
 def softmax(distribution):
     """ used to restore probability constraint of summing to 1 when elements are removed """
 
     summation = sum(distribution)
     return [float(x / summation) for x in distribution]
 
+@lru_cache(maxsize=3200)
 def difference_to_err_table_position(difference: int) -> int:
     # if difference < 0.05 or 
     if difference > 0.95:
@@ -28,7 +31,6 @@ def difference_to_err_table_position(difference: int) -> int:
         return 8
     else:
         return 9
-
 
 def initialize_err_table():
     err_table = {

@@ -4,6 +4,7 @@ import math
 
 import numpy as np
 import scipy.stats
+from functools import lru_cache
 
 class SampleSizeStep(IRStep):
 
@@ -71,6 +72,7 @@ class SampleSizeStep(IRStep):
         print('\rCalculating: Done!')
         return total_table
 
+    @lru_cache(maxsize=320000)
     def n(self, alpha, beta, p_0, p_1):
 
         z = (p_1-p_0)/(math.sqrt((p_0*(1-p_0)/self.k)))
@@ -89,6 +91,7 @@ class SampleSizeStep(IRStep):
 
         return round(float(nominator/denominator)**2 + float(1/denominator))
 
+    @lru_cache(maxsize=320000)
     def proportion_test(self, p1, alpha = 0.5, beta = 0.1, p0 = 0.5):
         z_alpha = scipy.stats.norm.ppf(1-alpha)
         z_beta = scipy.stats.norm.ppf(1-beta)

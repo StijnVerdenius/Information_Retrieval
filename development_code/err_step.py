@@ -1,6 +1,8 @@
 from ir_step import IRStep
 from models.document import Document
 import utils
+from functools import lru_cache
+
 
 class ERRStep(IRStep):
 
