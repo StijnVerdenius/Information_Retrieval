@@ -10,7 +10,7 @@ percentages4 = saver.load_python_obj("experiment4")
 
 result = {"pbm" : {"probabilistic_interleaving" : percentages1, "team_draft" : percentages3}, "random" : {"probabilistic_interleaving" : percentages2, "team_draft" : percentages4}}
 
-output_file_1 = open("impressions.csv", "w")
+output_file_1 = open("data/impressions.csv", "w")
 
 for click_model in final:
     for interleaving in final[click_model]:
@@ -32,6 +32,7 @@ for click_model in final:
             stdev = final[click_model][interleaving][bin]["std"]
 
             bin_output = "{},{},{},{},{},{},{},\n".format(bin, max, min, median, stdev, mean, listbuilder)
+            output_file_1.write(bin_output)
 
         output_file_1.write("\n")
         output_file_1.write("\n")
@@ -40,7 +41,7 @@ for click_model in final:
 output_file_1.close()
 
 
-output_file_2 = open("wins.csv", "w")
+output_file_2 = open("data/wins.csv", "w")
 
 for click_model in result:
     for interleaving in result[click_model]:
@@ -49,13 +50,15 @@ for click_model in result:
         output_file_2.write("\n")
         output_file_2.write("bin,whole_list,\n")
 
-        for bin in final[click_model][interleaving]:
+        for bin in result[click_model][interleaving]:
 
             listbuilder = ""
-            for element in final[click_model][interleaving][bin]:
+            for element in result[click_model][interleaving][bin]:
                 listbuilder = listbuilder + str(element) + ","
 
             bin_output = "{},{},\n".format(bin, listbuilder)
+
+            output_file_2.write(bin_output)
 
         output_file_2.write("\n")
         output_file_2.write("\n")

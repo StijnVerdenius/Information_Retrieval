@@ -3,6 +3,7 @@ from models.experiment import Experiment
 import user_clicks_simulation_step
 from saver import Saver
 import multiprocessing as mp
+from copy import deepcopy
 
 class InterleavingSimulationStep(IRStep):
     def __init__(self, name, purpose, data):
@@ -15,10 +16,10 @@ class InterleavingSimulationStep(IRStep):
         probabilistic_click_model = input_list[1]["probabilistic"]
         random_click_model = input_list[1]["random"]
 
-        experiment_1 = Experiment(probabilistic_interleavings_list, probabilistic_click_model, 1)
-        experiment_2 = Experiment(probabilistic_interleavings_list, random_click_model, 2)
-        experiment_3 = Experiment(team_draft_interleavings_list, probabilistic_click_model, 3)
-        experiment_4 = Experiment(team_draft_interleavings_list, random_click_model, 4)
+        experiment_1 = Experiment(deepcopy(probabilistic_interleavings_list), probabilistic_click_model, 1)
+        experiment_2 = Experiment(deepcopy(probabilistic_interleavings_list), random_click_model, 2)
+        experiment_3 = Experiment(deepcopy(team_draft_interleavings_list), probabilistic_click_model, 3)
+        experiment_4 = Experiment(deepcopy(team_draft_interleavings_list), random_click_model, 4)
 
         save_and_load = Saver("data/")
 
@@ -77,18 +78,24 @@ class InterleavingSimulationStep(IRStep):
             # save_and_load.save_python_obj(result_4, "experiment_4")
             processes[3].start()
 
-
-        for i, p in enumerate(processes):
-            if (i in ignores):
-                continue
-            p.join()
-            print("joined {}".format(i))
-
         for _ in range(4):
+            if (_ in ignores):
+                continue
+            print("Attempting get")
             result = q.get()
             index = result["name"]
             results[index-1] = result
             del result["name"]
+            print("Got {}".format(index))
+
+
+        for i, p in enumerate(processes):
+            if (i in ignores):
+                continue
+            print("Attempting join")
+            p.join()
+            print("joined {}".format(i))
+
 
         for i, res in zip([1,2,3,4], results):
             save_and_load.save_python_obj(res, "experiment{}".format(i))
@@ -109,6 +116,12 @@ class InterleavingSimulationStep(IRStep):
         print("finished step {}".format(self.name))
 
     def experimenting(self, experiment, q):
-        result = experiment.run()
+        result, file = experiment.run()
+        file.write("done\n")
+        file.flush()
         q.put(result)
+        file.write("put_data\n")
+        file.flush()
+        file.close()
+
         return

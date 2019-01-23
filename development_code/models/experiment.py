@@ -12,13 +12,22 @@ class Experiment():
     def run(self):
         self.win_percentage = utils.initialize_err_table()
 
+        f = open("data/temp/progressfile_{}.txt".format(self.name), "w")
+
 
         # for each interval, for each ranking pair we first 
         # run interleaving model then the click model k times
         for interval_index, interleaving_lists in enumerate(self.interleaving_interval_lists):
+
+            f.write("INTERVAL" + str(interval_index) + "\n")
+            f.flush()
+
             print("\rRunning interval: {} out of {}".format(interval_index, 9), end='')
             self.win_percentage[interval_index] = []
-            for interleaving in interleaving_lists:
+            for interleaving_index, interleaving in enumerate(interleaving_lists):
+
+                f.write("#" + str(interleaving_index) + " out of {} in bin {}\n".format(str(len(interleaving_lists)), str(interval_index)))
+                f.flush()
 
                 wins = 0
                 for _ in range(self.k):
@@ -32,4 +41,5 @@ class Experiment():
                 self.win_percentage[interval_index].append(current_pair_win_percentage)
 
         self.win_percentage["name"] = self.name
-        return self.win_percentage
+        f.flush()
+        return self.win_percentage, f
