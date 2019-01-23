@@ -52,22 +52,22 @@ click_models, counter = do_next_step([3], counter)
 
 ## Step 5: Simulate Interleaving Experiment
 
-import cProfile, pstats, io
-pr = cProfile.Profile()
-pr.enable()
+# import cProfile, pstats, io
+# pr = cProfile.Profile()
+# pr.enable()
 
 resulting_dictionary, counter = do_next_step([interleaving_dictionary, {"probabilistic": click_models[0], "random": click_models[1]}], counter)
 
-pr.disable()
-s = io.StringIO()
-sortby = 'cumulative'
-ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
-ps.print_stats()
-print (s.getvalue())
-
-import sys
-
-sys.exit(3)
+# pr.disable()
+# s = io.StringIO()
+# sortby = 'cumulative'
+# ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+# ps.print_stats()
+# print (s.getvalue())
+#
+# import sys
+#
+# sys.exit(3)
 
 ## Step 6: Compute Sample Size
 

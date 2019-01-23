@@ -3,13 +3,15 @@ import utils
 class Experiment():
     k = 3000
 
-    def __init__(self, interleaving_interval_lists, click_model):
+    def __init__(self, interleaving_interval_lists, click_model, name):
         self.win_percentage = {}
         self.interleaving_interval_lists = interleaving_interval_lists
         self.click_model = click_model
+        self.name = name
 
     def run(self):
         self.win_percentage = utils.initialize_err_table()
+
 
         # for each interval, for each ranking pair we first 
         # run interleaving model then the click model k times
@@ -28,4 +30,6 @@ class Experiment():
                 
                 current_pair_win_percentage = wins / self.k
                 self.win_percentage[interval_index].append(current_pair_win_percentage)
+
+        self.win_percentage["name"] = self.name
         return self.win_percentage
