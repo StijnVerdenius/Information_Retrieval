@@ -77,9 +77,10 @@ class InterleavingSimulationStep(IRStep):
             # save_and_load.save_python_obj(result_4, "experiment_4")
             processes[3].start()
 
-        for _ in range(4):
-            if (_ in ignores):
+        for experiment_index in range(4):
+            if (experiment_index in ignores):
                 continue
+                
             print("Attempting get\n")
             result = q.get()
             index = result["name"]
@@ -98,7 +99,7 @@ class InterleavingSimulationStep(IRStep):
         for i, res in zip([1,2,3,4], results):
             save_and_load.save_python_obj(res, "experiment{}".format(i))
 
-        result_1, result_2, result_3, result_4 = results[0], results[1], results[2], results[3],
+        result_1, result_2, result_3, result_4 = results[0], results[1], results[2], results[3]
 
         print("\rRunning experiments: Done!")
 
