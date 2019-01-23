@@ -2,6 +2,7 @@ from ir_step import IRStep
 from models.experiment import Experiment
 import user_clicks_simulation_step
 from saver import Saver
+import multiprocessing as mp
 
 class InterleavingSimulationStep(IRStep):
     def __init__(self, name, purpose, data):
@@ -62,3 +63,7 @@ class InterleavingSimulationStep(IRStep):
 
     def onfinish(self):
         print("finished step {}".format(self.name))
+
+    # def experimenting(self, experiment, q):
+    #     result = experiment.run()
+    #     q.put(result)

@@ -60,11 +60,9 @@ class Interleaving(object):
     def get_winner(self): # USE THIS ONE
         """ gets winner of interleaving """
 
-        scores = [self.score[i] for i in ["P", "E"]]
-        if (scores[0] == scores[1]):
-            # print("warning: tie in interleaving. '-1' returned")
+        if (self.score["E"] == self.score["P"]):
             return -1
-        return self.ranking2algorithm[np.argmax(scores)]
+        return max(self.score, key=self.score.get)
 
     def cut_off_at(self, cutoff): # USE THIS ONE (IF NEEDED)
         """ cuts off interleaving after certain rank. note: expectations are not recalculated """
