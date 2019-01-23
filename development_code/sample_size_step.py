@@ -66,8 +66,8 @@ class SampleSizeStep(IRStep):
                         "min" : min, 
                         "median": median, 
                         "mean" : mean, 
-                        "std": std
-                    ,"list" : current_bin}
+                        "std": std,
+                        "list" : current_bin}
 
         print('\rCalculating: Done!')
         return total_table

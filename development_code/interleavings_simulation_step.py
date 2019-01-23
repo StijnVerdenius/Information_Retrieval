@@ -3,7 +3,6 @@ from models.experiment import Experiment
 import user_clicks_simulation_step
 from saver import Saver
 import multiprocessing as mp
-from copy import deepcopy
 
 class InterleavingSimulationStep(IRStep):
     def __init__(self, name, purpose, data):
@@ -16,10 +15,10 @@ class InterleavingSimulationStep(IRStep):
         probabilistic_click_model = input_list[1]["probabilistic"]
         random_click_model = input_list[1]["random"]
 
-        experiment_1 = Experiment(deepcopy(probabilistic_interleavings_list), probabilistic_click_model, 1)
-        experiment_2 = Experiment(deepcopy(probabilistic_interleavings_list), random_click_model, 2)
-        experiment_3 = Experiment(deepcopy(team_draft_interleavings_list), probabilistic_click_model, 3)
-        experiment_4 = Experiment(deepcopy(team_draft_interleavings_list), random_click_model, 4)
+        experiment_1 = Experiment((probabilistic_interleavings_list), probabilistic_click_model, 1)
+        experiment_2 = Experiment((probabilistic_interleavings_list), random_click_model, 2)
+        experiment_3 = Experiment((team_draft_interleavings_list), probabilistic_click_model, 3)
+        experiment_4 = Experiment((team_draft_interleavings_list), random_click_model, 4)
 
         save_and_load = Saver("data/")
 
@@ -34,7 +33,7 @@ class InterleavingSimulationStep(IRStep):
         results = [None] * 4
 
         try:
-            print("\rRunning experiments: 1/4", end='')
+            print("Running experiments: 1/4")
             result = save_and_load.load_python_obj("experiment1")
             results[0] = result
             ignores.append(0)
@@ -46,7 +45,7 @@ class InterleavingSimulationStep(IRStep):
 
         
         try:
-            print("\rRunning experiments: 2/4", end='')
+            print("Running experiments: 2/4")
             result = save_and_load.load_python_obj("experiment2")
             results[1] = result
             ignores.append(1)
@@ -57,7 +56,7 @@ class InterleavingSimulationStep(IRStep):
             processes[1].start()
 
         try:
-            print("\rRunning experiments: 3/4", end='')
+            print("Running experiments: 3/4")
             result = save_and_load.load_python_obj("experiment3")
             results[2] = result
             ignores.append(2)
@@ -68,7 +67,7 @@ class InterleavingSimulationStep(IRStep):
             processes[2].start()
 
         try:
-            print("\rRunning experiments: 4/4", end='')
+            print("Running experiments: 4/4")
             result = save_and_load.load_python_obj("experiment4")
             results[3] = result
             ignores.append(3)
@@ -81,34 +80,29 @@ class InterleavingSimulationStep(IRStep):
         for _ in range(4):
             if (_ in ignores):
                 continue
-            print("Attempting get")
+            print("Attempting get\n")
             result = q.get()
             index = result["name"]
             results[index-1] = result
             del result["name"]
-            print("Got {}".format(index))
-
+            print("Got {}\n".format(index))
 
         for i, p in enumerate(processes):
             if (i in ignores):
                 continue
-            print("Attempting join")
+            print("Attempting join\n")
             p.join()
-            print("joined {}".format(i))
+            print("joined {}\n".format(i))
 
 
         for i, res in zip([1,2,3,4], results):
             save_and_load.save_python_obj(res, "experiment{}".format(i))
 
-        # result_1, result_2, result_3, result_4 = {i:[] for i in range(10)}, {i:[] for i in range(10)}, {i:[] for i in range(10)}, {i:[] for i in range(10)}
         result_1, result_2, result_3, result_4 = results[0], results[1], results[2], results[3],
 
         print("\rRunning experiments: Done!")
 
         result = {"pbm" : {"probabilistic_interleaving" : result_1, "team_draft" : result_3}, "random" : {"probabilistic_interleaving" : result_2, "team_draft" : result_4}}
-
-
-        # print (result)
 
         return result
 

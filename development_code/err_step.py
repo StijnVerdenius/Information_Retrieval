@@ -14,16 +14,24 @@ class ERRStep(IRStep):
         
         counter = 0
         for ranking_pair in ranking_pairs:
-            p_err = self.calculate_err(ranking_pair[0])
-            e_err = self.calculate_err(ranking_pair[1])
 
-            difference = e_err - p_err
+            try:
+                p_err = self.calculate_err(ranking_pair[0])
+                e_err = self.calculate_err(ranking_pair[1])
+
+                difference = e_err - p_err
+
+                # if E does not outperform P, discard this pair
+                if difference <= 0:
+                    continue
+
+
             
-            # if E does not outperform P, discard this pair
-            if difference <= 0:
+                counter += 1
+
+            except:
                 continue
-            
-            counter += 1
+
             err_table_position = utils.difference_to_err_table_position(difference)
             err_table[err_table_position].append(ranking_pair)
 
@@ -32,7 +40,6 @@ class ERRStep(IRStep):
 
         print (f'total ranking pairs left: {counter}')
         
-        # todo: agree on input-output (see step 3)
         return err_table
 
     def onfinish(self):

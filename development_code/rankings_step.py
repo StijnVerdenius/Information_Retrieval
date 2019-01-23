@@ -13,7 +13,7 @@ class RankingsStep(IRStep):
     def onStart(self, input_list):
         print("--- generating documents...")
 
-        documents = self.generate_documents()
+        documents = self.generate_documents(input_list[0])
 
         print("--- generating rankings...")
         p_rankings = itertools.permutations(documents, r=3)
@@ -30,17 +30,17 @@ class RankingsStep(IRStep):
     def onfinish(self):
         print("\n\nfinished step {}\n\n".format(self.name))
 
-    def generate_documents(self) -> List[Document]:
+    def generate_documents(self, number) -> List[Document]:
         current_id = 1
         documents = []
         
         # create 6 NOT_RELEVANT documents 
-        for i in range(3):
+        for i in range(number):
             documents.append(Document(current_id, 0))#Relevance.NOT_RELEVANT))
             current_id += 1
 
         # create 6 RELEVANT documents
-        for i in range(3):
+        for i in range(number):
             documents.append(Document(current_id, 1))#Relevance.RELEVANT))
             current_id += 1
 

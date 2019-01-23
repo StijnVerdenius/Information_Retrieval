@@ -25,8 +25,6 @@ class InterleavingsStep(IRStep):
 
             probabilistic_interleavings_list = []
             team_draft_interleavings_list = []
-
-            # what's supposed to be here?
             self.distribution = softmax([norm.pdf(x, 0, 1.5) for x in range(3)])
 
             for number, category in enumerate(input_list.values()):
@@ -41,13 +39,19 @@ class InterleavingsStep(IRStep):
                     if (pair_number % (int(len(category))/10) == 0):
                         print("\r{} out of {} done".format(pair_number,  len(category)), end='')
 
-                    probabilistic_interleaving = ProbabilisticInterleaving(ranking1, ranking2, self.distribution)
-                    probabilistic_interleaving.cut_off_at(3)
-                    local_probabilistic_interleavings_list.append(probabilistic_interleaving)
+                    try:
+                        probabilistic_interleaving = ProbabilisticInterleaving(ranking1, ranking2, self.distribution)
+                        probabilistic_interleaving.cut_off_at(3)
+                        local_probabilistic_interleavings_list.append(probabilistic_interleaving)
+                    except:
+                        pass
 
-                    draft_interleaving = TeamDraftInterleaving(ranking1, ranking2)
-                    draft_interleaving.cut_off_at(3)
-                    local_team_draft_interleavings_list.append(draft_interleaving)
+                    try:
+                        draft_interleaving = TeamDraftInterleaving(ranking1, ranking2)
+                        draft_interleaving.cut_off_at(3)
+                        local_team_draft_interleavings_list.append(draft_interleaving)
+                    except:
+                        pass
 
                 probabilistic_interleavings_list.append(local_probabilistic_interleavings_list)
                 team_draft_interleavings_list.append(local_team_draft_interleavings_list)

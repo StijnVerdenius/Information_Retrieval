@@ -22,23 +22,26 @@ class Experiment():
             f.write("INTERVAL" + str(interval_index) + "\n")
             f.flush()
 
-            print("\rRunning interval: {} out of {}".format(interval_index, 9), end='')
             self.win_percentage[interval_index] = []
             for interleaving_index, interleaving in enumerate(interleaving_lists):
 
-                f.write("#" + str(interleaving_index) + " out of {} in bin {}\n".format(str(len(interleaving_lists)), str(interval_index)))
-                f.flush()
+                try:
+                    f.write("#" + str(interleaving_index) + " out of {} in bin {}\n".format(str(len(interleaving_lists)), str(interval_index)))
+                    f.flush()
 
-                wins = 0
-                for _ in range(self.k):
-                    self.click_model.apply(interleaving)
+                    wins = 0
+                    for _ in range(self.k):
+                        self.click_model.apply(interleaving)
 
-                    winner = interleaving.get_winner()
-                    if winner == "E":
-                        wins += 1
-                
-                current_pair_win_percentage = wins / self.k
-                self.win_percentage[interval_index].append(current_pair_win_percentage)
+                        winner = interleaving.get_winner()
+                        if winner == "E":
+                            wins += 1
+
+                    current_pair_win_percentage = wins / self.k
+                    self.win_percentage[interval_index].append(current_pair_win_percentage)
+
+                except:
+                    continue
 
         self.win_percentage["name"] = self.name
         f.flush()

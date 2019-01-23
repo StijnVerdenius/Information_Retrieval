@@ -6,75 +6,65 @@ from interleavings_step import InterleavingsStep
 from user_clicks_simulation_step import UserClicksSimulationStep
 from interleavings_simulation_step import InterleavingSimulationStep
 from sample_size_step import SampleSizeStep
+import cProfile, pstats, io
+pr = cProfile.Profile()
+pr.enable()
 
+if __name__ == '__main__':
 
+    save_and_load = Saver("data/")
 
-# ... do something ...
+    ## Step 0 : Loading data
 
+    data = save_and_load.load_data_model_1()
 
-save_and_load = Saver("data/")
+    steps = [
+        RankingsStep(1, "Simulate Rankings of Relevance for E and P", data),
+        ERRStep(2, "Calculate the 𝛥measure", data),
+        InterleavingsStep(3, "Implement Team-Draft Interleaving and Probabilistic Interleaving ", data),
+        UserClicksSimulationStep(4, "Simulate User Clicks", data),
+        InterleavingSimulationStep(5, "Simulate Interleaving Experiment", data),
+        SampleSizeStep(6, "Compute Sample Size", data),
+    ]
 
-## Step 0 : Loading data
+    counter = 0
 
-data = save_and_load.load_data_model_1()
+    def do_next_step(input_list, counter):
+        step_output = steps[counter].do_step(input_list)
+        counter += 1
+        return step_output, counter
 
-steps = [
-    RankingsStep(1, "Simulate Rankings of Relevance for E and P", data),
-    ERRStep(2, "Calculate the 𝛥measure", data),
-    InterleavingsStep(3, "Implement Team-Draft Interleaving and Probabilistic Interleaving ", data),
-    UserClicksSimulationStep(4, "Simulate User Clicks", data),
-    InterleavingSimulationStep(5, "Simulate Interleaving Experiment", data),
-    SampleSizeStep(6, "Compute Sample Size", data),
-]
+    ## Step 1: Simulate Rankings of Relevance for E and P
 
-counter = 0
+    rankings_pairs, counter = do_next_step([6], counter)
 
-def do_next_step(input_list, counter):
-    step_output = steps[counter].do_step(input_list)
-    counter += 1
-    return step_output, counter
+    ## Step 2: Calculate the 𝛥measure
 
-## Step 1: Simulate Rankings of Relevance for E and P
+    err_table, counter = do_next_step(rankings_pairs, counter)
 
-rankings_pairs, counter = do_next_step(None, counter)
+    ## Step 3: Implement Team-Draft Interleaving (5pts) and Probabilistic Interleaving (35 points)
 
-## Step 2: Calculate the 𝛥measure
+    interleaving_dictionary, counter = do_next_step(err_table, counter)
 
-err_table, counter = do_next_step(rankings_pairs, counter)
+    ## Step 4: Simulate User Clicks (40 points)
 
-## Step 3: Implement Team-Draft Interleaving (5pts) and Probabilistic Interleaving (35 points)
+    click_models, counter = do_next_step([3], counter)
 
-interleaving_dictionary, counter = do_next_step(err_table, counter)
+    ## Step 5: Simulate Interleaving Experiment
 
-## Step 4: Simulate User Clicks (40 points)
+    resulting_dictionary, counter = do_next_step([interleaving_dictionary, {"probabilistic": click_models[0], "random": click_models[1]}], counter)
 
-click_models, counter = do_next_step([3], counter)
+    ## Step 6: Compute Sample Size
 
-## Step 5: Simulate Interleaving Experiment
+    filled_in_table, counter = do_next_step(resulting_dictionary, counter)
 
-# import cProfile, pstats, io
-# pr = cProfile.Profile()
-# pr.enable()
+    pr.disable()
+    s = io.StringIO()
+    sortby = 'cumulative'
+    ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+    ps.print_stats()
+    print (s.getvalue())
 
-resulting_dictionary, counter = do_next_step([interleaving_dictionary, {"probabilistic": click_models[0], "random": click_models[1]}], counter)
+    print("#######\n\n\nFINAL RESULT\n\n\n{}".format(filled_in_table))
 
-# pr.disable()
-# s = io.StringIO()
-# sortby = 'cumulative'
-# ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
-# ps.print_stats()
-# print (s.getvalue())
-#
-# import sys
-#
-# sys.exit(3)
-
-## Step 6: Compute Sample Size
-
-filled_in_table, counter = do_next_step(resulting_dictionary, counter)
-
-print("#######\n\n\nFINAL RESULT\n\n\n{}".format(filled_in_table))
-
-save_and_load.save_python_obj(filled_in_table, "Final result")
-
-# Step 7: Analysis (20 points) (notebook only)
+    save_and_load.save_python_obj(filled_in_table, "Final result")
