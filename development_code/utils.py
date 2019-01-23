@@ -9,7 +9,7 @@ def softmax(distribution):
     return [float(x / summation) for x in distribution]
 
 @lru_cache(maxsize=3200)
-def difference_to_err_table_position(difference: int) -> int:
+def difference_to_err_table_position(difference: float) -> int:
     # if difference < 0.05 or 
     if difference > 0.95:
         raise Exception("Invalid difference")
