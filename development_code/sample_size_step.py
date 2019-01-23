@@ -1,6 +1,7 @@
 from ir_step import IRStep
 
 import math
+import utils
 
 import numpy as np
 import scipy.stats
@@ -46,7 +47,6 @@ class SampleSizeStep(IRStep):
                         # total_table[click_model][interleaving_type][bin].append(proportion_test)
                         current_bin.append(proportion_test)
 
-
                     max = "None"
                     min = "None"
                     median = "None"
@@ -54,6 +54,8 @@ class SampleSizeStep(IRStep):
                     std = "None"
 
                     if (len(current_bin) > 0):
+                        max_chunks = 250
+                        current_bin = utils.average_chunks(current_bin, max_chunks)
 
                         max = np.max(current_bin)
                         min = np.min(current_bin)

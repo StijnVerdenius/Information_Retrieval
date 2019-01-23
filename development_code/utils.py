@@ -1,4 +1,6 @@
 from functools import lru_cache
+import numpy as np
+import math
 
 def softmax(distribution):
     """ used to restore probability constraint of summing to 1 when elements are removed """
@@ -47,3 +49,22 @@ def initialize_err_table():
     }
 
     return err_table
+
+def split_to_chunks(list_to_split, chunks_size):
+    """Yield successive n-sized chunks from l."""
+    chunks = []
+    for i in range(0, len(list_to_split), chunks_size):
+        chunks.append(list_to_split[i:i + chunks_size])
+    
+    return chunks
+
+def average_chunks(list_to_split, max_chunks):
+    chunks_size = math.ceil(len(list_to_split) / max_chunks)
+    chunks = split_to_chunks(list_to_split, chunks_size)
+
+    result = []
+    for chunk in chunks:
+        chunk_average = np.average(chunk)
+        result.append(chunk_average)
+
+    return result

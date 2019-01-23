@@ -1,12 +1,21 @@
 from saver import Saver
+import utils
+
+def average_experiment_dict(experiment_dict):
+    max_chunks = 250
+    for i in range(10):
+        if len(experiment_dict[i]) > 0:
+            experiment_dict[i] = utils.average_chunks(experiment_dict[i], max_chunks)
+
+    return experiment_dict
 
 saver = Saver("data/")
 
 final = saver.load_python_obj("Final result")
-percentages1 = saver.load_python_obj("experiment1")
-percentages2 = saver.load_python_obj("experiment2")
-percentages3 = saver.load_python_obj("experiment3")
-percentages4 = saver.load_python_obj("experiment4")
+percentages1 = average_experiment_dict(saver.load_python_obj("experiment1"))
+percentages2 = average_experiment_dict(saver.load_python_obj("experiment2"))
+percentages3 = average_experiment_dict(saver.load_python_obj("experiment3"))
+percentages4 = average_experiment_dict(saver.load_python_obj("experiment4"))
 
 result = {"pbm" : {"probabilistic_interleaving" : percentages1, "team_draft" : percentages3}, "random" : {"probabilistic_interleaving" : percentages2, "team_draft" : percentages4}}
 
