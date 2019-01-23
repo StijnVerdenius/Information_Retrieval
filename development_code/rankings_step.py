@@ -37,12 +37,12 @@ class RankingsStep(IRStep):
         
         # create 6 NOT_RELEVANT documents 
         for i in range(6):
-            documents.append(Document(current_id, Relevance.NOT_RELEVANT))
+            documents.append(Document(current_id, 0))#Relevance.NOT_RELEVANT))
             current_id += 1
 
         # create 6 RELEVANT documents
         for i in range(6):
-            documents.append(Document(current_id, Relevance.RELEVANT))
+            documents.append(Document(current_id, 1))#Relevance.RELEVANT))
             current_id += 1
 
         return documents
