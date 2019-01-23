@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
     ## Step 1: Simulate Rankings of Relevance for E and P
 
-    rankings_pairs, counter = do_next_step([6], counter)
+    rankings_pairs, counter = do_next_step([3], counter)
 
     ## Step 2: Calculate the 𝛥measure
 
