@@ -39,7 +39,7 @@ for line in f:
                       "TypeOfAction": elements[2],
                       "QueryID": int(elements[3]),
                       "RegionID": int(elements[4]),
-                      "ListOfURLs": [int(x) for x in elements[5:]]
+                      "ListOfURLs": [int(x) for x in elements[5:8]]
 
                       }
     else:
@@ -113,6 +113,8 @@ def init_alphas(data, value):
                     if f['QueryID'] not in alphas[u].keys():
                         alphas[u][f['QueryID']] = value
     return alphas
+
+def init_gammas():
 
 
 
@@ -235,7 +237,7 @@ def EMtrain(data):
     return current_a, current_g
     # return current_g
 
-a, g = EMtrain(frame)
+# a, g = EMtrain(frame)
 # g = EMtrain(frame)
 
 
@@ -268,13 +270,34 @@ def RCMtrain(data):
                 if document[2] is True:
                     numerator += 1
                 denominator += 1
-
+            print()
     rho = numerator/denominator
 
     return rho
 
 
 rho = RCMtrain(frame)
+print(rho)
+
+
+
+def RCMtrain(data):
+
+    sc = get_sc(data)
+    numerator = 0
+    denominator = 0
+    for session in sc:
+        for query in sc[session]:
+            for document in sc[session][query]:
+                if document[2] is True:
+                    numerator += 1
+                denominator += 1
+            print()
+    rho = numerator/denominator
+
+    return rho
+
+
 
 
 def apply_RCM(i_ranks, rho):
